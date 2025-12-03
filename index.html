@@ -12,7 +12,7 @@
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://jam1796.github.io/Mercado-Automotivo-Brasil/">
     
-    <!-- Favicon Simples -->
+    <!-- Favicon -->
     <link rel="icon" href="https://fav.farm/🚘">
 
     <!-- Tailwind CSS -->
@@ -78,7 +78,7 @@
                 
                 <div class="hidden md:flex space-x-8 items-center">
                     <a href="#overview" class="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-blue-600 transition">Visão Geral</a>
-                    <a href="#models-data" class="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-blue-600 transition">Modelos</a>
+                    <a href="#models-data" class="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-blue-600 transition">Ranking Top 50</a>
                     <a href="#electrification" class="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-blue-600 transition">Eletrificação</a>
                     <a href="#investments" class="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-blue-600 transition">Investimentos</a>
                     
@@ -105,7 +105,7 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10" data-aos="fade-up">
             <div class="inline-flex items-center gap-2 bg-blue-500/20 border border-blue-400/30 rounded-full px-3 py-1 mb-6">
                 <span class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
-                <span class="text-xs font-semibold uppercase tracking-wider text-blue-100">Dados Consolidados 2023-2025</span>
+                <span class="text-xs font-semibold uppercase tracking-wider text-blue-100">Dados Consolidados Nov/2025</span>
             </div>
             <h1 class="text-4xl md:text-6xl font-extrabold tracking-tight mb-6 leading-tight">
                 Análise Estratégica do <br>
@@ -209,26 +209,29 @@
             </div>
         </section>
 
-        <!-- Section 3: Data Table (WITH SORTING) -->
+        <!-- Section 3: Data Table (WITH RANKING #) -->
         <section id="models-data" data-aos="fade-up">
             <div class="flex flex-col md:flex-row justify-between items-end mb-6 gap-4">
                 <div>
-                    <h2 class="text-2xl font-bold text-slate-900 dark:text-white mb-2">Desempenho por Modelo</h2>
-                    <p class="text-slate-600 dark:text-slate-400 text-sm">Dados de vendas e posicionamento estratégico.</p>
+                    <h2 class="text-2xl font-bold text-slate-900 dark:text-white mb-2">Ranking de Vendas (Top 50+)</h2>
+                    <p class="text-slate-600 dark:text-slate-400 text-sm">Dados de mercado acumulados (Fenabrave/AutoData) - Referência 2024/25.</p>
                 </div>
                 <div class="relative w-full md:w-72">
                     <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                         <i class="fa-solid fa-search text-slate-400"></i>
                     </div>
-                    <input type="text" id="searchInput" placeholder="Buscar..." class="block w-full pl-10 pr-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all shadow-sm">
+                    <input type="text" id="searchInput" placeholder="Buscar modelo, marca..." class="block w-full pl-10 pr-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all shadow-sm">
                 </div>
             </div>
 
             <div class="bg-white dark:bg-slate-800 rounded-xl shadow-lg border border-slate-200 dark:border-slate-700 overflow-hidden">
-                <div class="overflow-x-auto custom-scrollbar">
+                <div class="overflow-x-auto custom-scrollbar" style="max-height: 500px;">
                     <table class="min-w-full divide-y divide-slate-200 dark:divide-slate-700">
-                        <thead class="bg-slate-50 dark:bg-slate-700/50">
+                        <thead class="bg-slate-50 dark:bg-slate-700/50 sticky top-0 backdrop-blur-sm z-10">
                             <tr>
+                                <th onclick="sortTable('rank')" class="sortable px-6 py-3 text-left text-xs font-bold text-slate-700 dark:text-slate-200 uppercase tracking-wider w-16">
+                                    # <i class="fa-solid fa-sort ml-1 opacity-50"></i>
+                                </th>
                                 <th onclick="sortTable('model')" class="sortable px-6 py-3 text-left text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">
                                     Modelo <i class="fa-solid fa-sort ml-1 opacity-50"></i>
                                 </th>
@@ -238,7 +241,7 @@
                                 <th onclick="sortTable('category')" class="sortable px-6 py-3 text-left text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">
                                     Categoria <i class="fa-solid fa-sort ml-1 opacity-50"></i>
                                 </th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">Status</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">Status / Nota</th>
                             </tr>
                         </thead>
                         <tbody id="carTableBody" class="bg-white dark:bg-slate-800 divide-y divide-slate-200 dark:divide-slate-700 text-sm">
@@ -247,8 +250,8 @@
                     </table>
                 </div>
                 <div class="px-6 py-3 bg-slate-50 dark:bg-slate-700/30 border-t border-slate-200 dark:border-slate-700 text-xs text-slate-500 dark:text-slate-400 flex justify-between items-center">
-                    <span id="resultCount">Mostrando todos os resultados</span>
-                    <span>Fonte: Relatório 2023-2025</span>
+                    <span id="resultCount">Carregando dados...</span>
+                    <span>Fonte: Fenabrave/AutoData (Estimativa 2025)</span>
                 </div>
             </div>
         </section>
@@ -326,25 +329,21 @@
 
     <footer class="bg-slate-900 text-slate-400 py-12 mt-12 border-t border-slate-800 text-center">
         <div class="max-w-7xl mx-auto px-4">
-            <p class="text-sm mb-4">Dados baseados no relatório "Mercado Automotivo Brasileiro: Análise Prospectiva (2023-2030)"</p>
+            <p class="text-sm mb-4">Dados baseados no relatório "Mercado Automotivo Brasileiro" e bases Fenabrave.</p>
             <p class="text-xs opacity-50">&copy; 2025 Dashboard Automotivo.</p>
         </div>
     </footer>
 
     <script>
-        // --- 1. CONFIGURAÇÃO GERAL (DEVE VIR PRIMEIRO) ---
-        // Inicializa animações AOS
+        // --- 1. CONFIG ---
         AOS.init({ duration: 800, once: true, offset: 50 });
-        
-        // Configuração de fontes globais
         Chart.defaults.font.family = "'Inter', sans-serif";
 
-        // --- 2. VARIÁVEIS GLOBAIS DOS GRÁFICOS (PARA EVITAR ERROS) ---
         let salesChart = null;
         let shareChart = null;
         let evChart = null;
 
-        // --- 3. DEFINIÇÃO DE CORES E TEMA ---
+        // --- 2. HELPERS ---
         function getChartColors(theme) {
             return {
                 text: theme === 'dark' ? '#cbd5e1' : '#64748b',
@@ -355,19 +354,13 @@
         function updateChartColors(theme) {
             const colors = getChartColors(theme);
             Chart.defaults.color = colors.text;
-            
-            // Verifica se os gráficos existem antes de tentar atualizar
             [salesChart, shareChart, evChart].forEach(c => {
-                if (c) {
-                   if(c.options.scales && c.options.scales.y) {
-                       c.options.scales.y.grid.color = colors.grid;
-                   }
-                   c.update();
-                }
+                if (c && c.options.scales?.y) c.options.scales.y.grid.color = colors.grid;
+                if (c) c.update();
             });
         }
 
-        // --- 4. DARK MODE LOGIC ---
+        // --- 3. THEME ---
         const themeBtn = document.getElementById('theme-toggle');
         const themeBtnMob = document.getElementById('theme-toggle-mobile');
         
@@ -377,8 +370,6 @@
             document.getElementById('theme-icon-mobile').className = `fa-solid ${iconClass}`;
             document.documentElement.classList.toggle('dark', isDark);
             localStorage.theme = isDark ? 'dark' : 'light';
-            
-            // Chama atualização de cores dos gráficos
             updateChartColors(isDark ? 'dark' : 'light');
         }
 
@@ -386,14 +377,12 @@
             updateTheme(!document.documentElement.classList.contains('dark'));
         }));
 
-        // --- 5. INICIALIZAÇÃO DOS GRÁFICOS (EM ORDEM) ---
-        
-        // 5.1 Sales Chart
+        // --- 4. CHARTS ---
+        // Sales
         const salesData = {
             annual: { labels: ['2022', '2023', '2024', '2025 (Proj)', '2030 (Proj)'], data: [2.10, 2.20, 2.65, 2.80, 3.10] },
             semiannual: { labels: ['1º Sem 23', '2º Sem 23', '1º Sem 24', '2º Sem 24', '1º Sem 25'], data: [1.08, 1.12, 1.22, 1.43, 1.28] }
         };
-        
         const ctxSales = document.getElementById('salesChart');
         if (ctxSales) {
             salesChart = new Chart(ctxSales, {
@@ -410,7 +399,6 @@
                 options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: false, grid: { borderDash: [5, 5] } }, x: { grid: { display: false } } } }
             });
         }
-
         window.updateSalesData = function(period) {
             if (!salesChart) return;
             const isAnnual = period === 'annual';
@@ -421,7 +409,7 @@
             salesChart.update();
         };
 
-        // 5.2 Share Chart
+        // Share
         const ctxShare = document.getElementById('shareChart');
         if (ctxShare) {
             shareChart = new Chart(ctxShare, {
@@ -437,7 +425,7 @@
             });
         }
 
-        // 5.3 EV Chart
+        // EV
         const ctxEV = document.getElementById('evChart');
         if (ctxEV) {
             evChart = new Chart(ctxEV, {
@@ -453,37 +441,74 @@
             });
         }
 
-        // --- 6. DATA TABLE LOGIC ---
+        // --- 5. DATA TABLE (TOP 50+) ---
         let carData = [
-            { model: "Fiat Strada", brand: "Fiat", category: "Picape", status: "<span class='text-green-600 dark:text-green-400 font-bold'>Líder Geral</span>" },
-            { model: "Fiat Toro", brand: "Fiat", category: "Picape", status: "Top Seller" },
-            { model: "VW Polo", brand: "Volkswagen", category: "Hatch", status: "<span class='text-blue-600 dark:text-blue-400 font-bold'>Líder Passeio</span>" },
-            { model: "VW T-Cross", brand: "Volkswagen", category: "SUV", status: "Alta Demanda" },
-            { model: "Hyundai Creta", brand: "Hyundai", category: "SUV", status: "Líder Varejo (CPF)" },
-            { model: "Chevrolet Onix", brand: "GM", category: "Hatch", status: "Recuperação" },
-            { model: "Honda HR-V", brand: "Honda", category: "SUV", status: "Crescimento +33%" },
-            { model: "BYD Dolphin Mini", brand: "BYD", category: "Elétrico (BEV)", status: "<span class='text-teal-600 dark:text-teal-400 font-bold'>Fenômeno de Vendas</span>" },
-            { model: "BYD Dolphin", brand: "BYD", category: "Elétrico (BEV)", status: "Vice-Líder BEV" },
-            { model: "Toyota Hilux", brand: "Toyota", category: "Picape", status: "Líder Segmento Médio" },
-            { model: "Volvo EX30", brand: "Volvo", category: "Elétrico (BEV)", status: "Top 5 Elétricos" },
-            { model: "Toyota Corolla", brand: "Toyota", category: "Sedã/Híbrido", status: "Líder Híbrido Flex" },
-            { model: "GWM Haval H6", brand: "GWM", category: "SUV Híbrido", status: "Destaque PHEV" },
-            { model: "Nissan Kicks", brand: "Nissan", category: "SUV", status: "Estável" }
+            { rank: 1, model: "Fiat Strada", brand: "Fiat", category: "Picape", status: "<span class='text-green-600 font-bold'>Líder Supremo</span>" },
+            { rank: 2, model: "VW Polo", brand: "Volkswagen", category: "Hatch", status: "<span class='text-blue-600 font-bold'>Líder Passeio</span>" },
+            { rank: 3, model: "Chevrolet Onix", brand: "GM", category: "Hatch", status: "Estável" },
+            { rank: 4, model: "Hyundai HB20", brand: "Hyundai", category: "Hatch", status: "Alta Liquidez" },
+            { rank: 5, model: "VW T-Cross", brand: "Volkswagen", category: "SUV", status: "<span class='text-purple-600 font-bold'>Líder SUV</span>" },
+            { rank: 6, model: "Fiat Argo", brand: "Fiat", category: "Hatch", status: "Forte no Varejo" },
+            { rank: 7, model: "Hyundai Creta", brand: "Hyundai", category: "SUV", status: "Líder Vendas CPF" },
+            { rank: 8, model: "Chevrolet Tracker", brand: "GM", category: "SUV", status: "Competitivo" },
+            { rank: 9, model: "Nissan Kicks", brand: "Nissan", category: "SUV", status: "Nova Geração à vista" },
+            { rank: 10, model: "Fiat Mobi", brand: "Fiat", category: "Hatch", status: "Entrada" },
+            { rank: 11, model: "Chevrolet Onix Plus", brand: "GM", category: "Sedã", status: "Líder Sedãs" },
+            { rank: 12, model: "Jeep Compass", brand: "Jeep", category: "SUV Médio", status: "Premium Leader" },
+            { rank: 13, model: "VW Nivus", brand: "Volkswagen", category: "SUV Cupê", status: "Design" },
+            { rank: 14, model: "Jeep Renegade", brand: "Jeep", category: "SUV", status: "Forte" },
+            { rank: 15, model: "Honda HR-V", brand: "Honda", category: "SUV", status: "Crescimento +30%" },
+            { rank: 16, model: "Fiat Toro", brand: "Fiat", category: "Picape", status: "Líder Intermediária" },
+            { rank: 17, model: "Toyota Corolla Cross", brand: "Toyota", category: "SUV", status: "Híbrido Forte" },
+            { rank: 18, model: "Fiat Fastback", brand: "Fiat", category: "SUV Cupê", status: "Ascensão" },
+            { rank: 19, model: "Toyota Hilux", brand: "Toyota", category: "Picape", status: "Líder Média" },
+            { rank: 20, model: "VW Saveiro", brand: "Volkswagen", category: "Picape", status: "Trabalho" },
+            { rank: 21, model: "Hyundai HB20S", brand: "Hyundai", category: "Sedã", status: "Estável" },
+            { rank: 22, model: "Toyota Corolla", brand: "Toyota", category: "Sedã", status: "Híbrido Flex" },
+            { rank: 23, model: "Fiat Pulse", brand: "Fiat", category: "SUV", status: "Entrada Turbo" },
+            { rank: 24, model: "Renault Kwid", brand: "Renault", category: "Hatch", status: "Entrada" },
+            { rank: 25, model: "Caoa Chery Tiggo 7", brand: "Caoa Chery", category: "SUV", status: "Custo-Benefício" },
+            { rank: 26, model: "Chevrolet Montana", brand: "GM", category: "Picape", status: "Urbana" },
+            { rank: 27, model: "BYD Song Plus", brand: "BYD", category: "SUV Híbrido", status: "<span class='text-teal-500 font-bold'>Líder PHEV</span>" },
+            { rank: 28, model: "GWM Haval H6", brand: "GWM", category: "SUV Híbrido", status: "Forte Concorrência" },
+            { rank: 29, model: "Toyota Yaris HB", brand: "Toyota", category: "Hatch", status: "Fim de Ciclo" },
+            { rank: 30, model: "BYD Dolphin Mini", brand: "BYD", category: "Elétrico (BEV)", status: "<span class='text-teal-500 font-bold'>Líder BEV</span>" },
+            { rank: 31, model: "Renault Duster", brand: "Renault", category: "SUV", status: "Robusto" },
+            { rank: 32, model: "Citroen C3", brand: "Citroen", category: "Hatch", status: "Acessível" },
+            { rank: 33, model: "Ram Rampage", brand: "Ram", category: "Picape", status: "Premium" },
+            { rank: 34, model: "Toyota SW4", brand: "Toyota", category: "SUV Grande", status: "Líder Categoria" },
+            { rank: 35, model: "Honda City", brand: "Honda", category: "Sedã", status: "Confiável" },
+            { rank: 36, model: "VW Virtus", brand: "Volkswagen", category: "Sedã", status: "Espaçoso" },
+            { rank: 37, model: "Chevrolet Spin", brand: "GM", category: "Minivan", status: "7 Lugares" },
+            { rank: 38, model: "Peugeot 208", brand: "Peugeot", category: "Hatch", status: "Motor Turbo" },
+            { rank: 39, model: "BYD Dolphin", brand: "BYD", category: "Elétrico (BEV)", status: "Vice BEV" },
+            { rank: 40, model: "GWM Ora 03", brand: "GWM", category: "Elétrico (BEV)", status: "Nicho Premium" },
+            { rank: 41, model: "Renault Kardian", brand: "Renault", category: "SUV", status: "Lançamento Recente" },
+            { rank: 42, model: "VW Taos", brand: "Volkswagen", category: "SUV", status: "Discreto" },
+            { rank: 43, model: "Caoa Chery Tiggo 5x", brand: "Caoa Chery", category: "SUV", status: "Sport" },
+            { rank: 44, model: "Mitsubishi L200", brand: "Mitsubishi", category: "Picape", status: "Agro" },
+            { rank: 45, model: "Ford Ranger", brand: "Ford", category: "Picape", status: "Nova Geração" },
+            { rank: 46, model: "Renault Oroch", brand: "Renault", category: "Picape", status: "Nicho" },
+            { rank: 47, model: "Jeep Commander", brand: "Jeep", category: "SUV 7 Lug", status: "Familiar" },
+            { rank: 48, model: "VW Tera", brand: "Volkswagen", category: "SUV", status: "<span class='text-red-500 font-bold'>Novo 2025</span>" },
+            { rank: 49, model: "Volvo EX30", brand: "Volvo", category: "Elétrico (BEV)", status: "Premium BEV" },
+            { rank: 50, model: "BYD Yuan Plus", brand: "BYD", category: "SUV Elétrico", status: "Global" }
         ];
 
-        let sortDirection = { model: 1, brand: 1, category: 1 };
+        let sortDirection = { rank: 1, model: 1, brand: 1, category: 1 };
         let currentData = [...carData];
 
         function renderTable(data) {
             const body = document.getElementById('carTableBody');
             body.innerHTML = data.map(car => `
                 <tr class="hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors">
+                    <td class="px-6 py-4 whitespace-nowrap font-bold text-slate-700 dark:text-slate-300">${car.rank}º</td>
                     <td class="px-6 py-4 whitespace-nowrap font-medium text-slate-900 dark:text-white">${car.model}</td>
                     <td class="px-6 py-4 whitespace-nowrap text-slate-500 dark:text-slate-300">${car.brand}</td>
                     <td class="px-6 py-4 whitespace-nowrap text-slate-500 dark:text-slate-300">${car.category}</td>
                     <td class="px-6 py-4 whitespace-nowrap text-slate-500 dark:text-slate-300">${car.status}</td>
                 </tr>`).join('');
-            document.getElementById('resultCount').textContent = `Mostrando ${data.length} resultados`;
+            document.getElementById('resultCount').textContent = `Exibindo ${data.length} veículos`;
         }
 
         window.sortTable = function(key) {
@@ -508,14 +533,12 @@
 
         renderTable(currentData);
 
-        // --- 7. VERIFICAÇÃO FINAL DE TEMA (APÓS TUDO CARREGADO) ---
+        // --- 6. CHECK THEME ---
         if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
             updateTheme(true);
         } else {
-            // Garante que as cores iniciais do gráfico estejam corretas para o modo light
             updateChartColors('light');
         }
-
     </script>
 </body>
 </html>
