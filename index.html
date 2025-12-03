@@ -3,8 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Relatório Executivo: Mercado Automotivo Brasileiro 2025</title>
     
+    <!-- SEO & Social Sharing -->
+    <title>Relatório Automotivo 2025 | Joao Ataide Moura</title>
+    <meta name="description" content="Dashboard executivo com análise estratégica do mercado automotivo brasileiro (2023-2030). Dados sobre vendas, eletrificação e investimentos.">
+    <meta property="og:title" content="Relatório Automotivo Brasileiro 2025">
+    <meta property="og:description" content="Análise interativa: Recuperação de mercado, Revolução dos Elétricos e Ciclo de Investimentos de R$ 100 Bi.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://jam1796.github.io/Mercado-Automotivo-Brasil/">
+    
+    <!-- Favicon Simples -->
+    <link rel="icon" href="https://fav.farm/🚘">
+
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -44,7 +54,11 @@
             transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
         }
         
-        /* Custom Scrollbar for Table */
+        /* Cursor pointer for sortable headers */
+        th.sortable { cursor: pointer; user-select: none; }
+        th.sortable:hover { background-color: rgba(0,0,0,0.05); }
+        .dark th.sortable:hover { background-color: rgba(255,255,255,0.05); }
+
         .custom-scrollbar::-webkit-scrollbar { height: 8px; }
         .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
         .custom-scrollbar::-webkit-scrollbar-thumb { background-color: #cbd5e1; border-radius: 20px; }
@@ -68,7 +82,6 @@
                     <a href="#electrification" class="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-blue-600 transition">Eletrificação</a>
                     <a href="#investments" class="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-blue-600 transition">Investimentos</a>
                     
-                    <!-- Botão Dark Mode -->
                     <button id="theme-toggle" class="p-2 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-yellow-400 hover:bg-slate-200 dark:hover:bg-slate-700 focus:outline-none transition">
                         <i id="theme-icon" class="fa-solid fa-moon"></i>
                     </button>
@@ -102,7 +115,6 @@
                 Relatório executivo sobre a inflexão histórica da indústria: recuperação pós-pandemia, o impacto do programa MOVER e a disrupção das montadoras chinesas.
             </p>
             
-            <!-- KPI Grid -->
             <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-12">
                 <div class="glass-panel rounded-xl p-4">
                     <p class="text-blue-200 text-sm font-medium uppercase">Vendas 2025 (Proj)</p>
@@ -130,7 +142,7 @@
 
     <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 space-y-24">
 
-        <!-- Section 1: Evolution Chart WITH FILTERS -->
+        <!-- Section 1: Evolution Chart -->
         <section id="overview" class="grid lg:grid-cols-12 gap-12 items-start" data-aos="fade-up">
             <div class="lg:col-span-5 space-y-6">
                 <h2 class="text-3xl font-bold text-slate-900 dark:text-white border-l-4 border-blue-600 pl-4">A Jornada de Recuperação</h2>
@@ -155,18 +167,11 @@
             <div class="lg:col-span-7 bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-xl border border-slate-100 dark:border-slate-700">
                 <div class="flex justify-between items-center mb-6">
                     <h3 class="text-sm font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Evolução de Vendas</h3>
-                    
-                    <!-- Chart Filters -->
                     <div class="bg-slate-100 dark:bg-slate-700 rounded-lg p-1 flex">
-                        <button onclick="updateSalesData('annual')" id="btn-annual" class="px-4 py-1.5 text-xs font-semibold rounded-md bg-white dark:bg-slate-600 text-blue-600 dark:text-white shadow-sm transition-all">
-                            Anual
-                        </button>
-                        <button onclick="updateSalesData('semiannual')" id="btn-semiannual" class="px-4 py-1.5 text-xs font-semibold rounded-md text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-all">
-                            Semestral
-                        </button>
+                        <button onclick="updateSalesData('annual')" id="btn-annual" class="px-4 py-1.5 text-xs font-semibold rounded-md bg-white dark:bg-slate-600 text-blue-600 dark:text-white shadow-sm transition-all">Anual</button>
+                        <button onclick="updateSalesData('semiannual')" id="btn-semiannual" class="px-4 py-1.5 text-xs font-semibold rounded-md text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-all">Semestral</button>
                     </div>
                 </div>
-                
                 <div class="chart-container">
                     <canvas id="salesChart"></canvas>
                 </div>
@@ -188,41 +193,34 @@
                     </div>
                 </div>
                 <div class="space-y-4">
-                    <!-- Cards de Share (Fiat, VW, etc) -->
                     <div class="bg-white dark:bg-slate-800 p-4 rounded-xl shadow-sm border-l-4 border-red-600 flex justify-between">
-                        <div><h4 class="font-bold text-slate-900 dark:text-white">Fiat</h4><p class="text-xs text-slate-500">Líder Geral</p></div>
-                        <span class="text-xl font-bold">21.2%</span>
+                        <div><h4 class="font-bold text-slate-900 dark:text-white">Fiat</h4><p class="text-xs text-slate-500">Líder Geral</p></div><span class="text-xl font-bold">21.2%</span>
                     </div>
                     <div class="bg-white dark:bg-slate-800 p-4 rounded-xl shadow-sm border-l-4 border-blue-600 flex justify-between">
-                        <div><h4 class="font-bold text-slate-900 dark:text-white">Volkswagen</h4><p class="text-xs text-slate-500">Líder Passeio</p></div>
-                        <span class="text-xl font-bold">18.4%</span>
+                        <div><h4 class="font-bold text-slate-900 dark:text-white">Volkswagen</h4><p class="text-xs text-slate-500">Líder Passeio</p></div><span class="text-xl font-bold">18.4%</span>
                     </div>
                     <div class="bg-white dark:bg-slate-800 p-4 rounded-xl shadow-sm border-l-4 border-yellow-500 flex justify-between">
-                        <div><h4 class="font-bold text-slate-900 dark:text-white">GM</h4><p class="text-xs text-slate-500">Recuperação</p></div>
-                        <span class="text-xl font-bold">13.1%</span>
+                        <div><h4 class="font-bold text-slate-900 dark:text-white">GM</h4><p class="text-xs text-slate-500">Recuperação</p></div><span class="text-xl font-bold">13.1%</span>
                     </div>
                     <div class="bg-white dark:bg-slate-800 p-4 rounded-xl shadow-sm border-l-4 border-teal-500 flex justify-between bg-teal-50 dark:bg-teal-900/30">
-                        <div><h4 class="font-bold text-teal-900 dark:text-teal-400">BYD & GWM</h4><p class="text-xs text-teal-700 dark:text-teal-500">Disrupção EV</p></div>
-                        <span class="text-sm font-bold">Top EV/PHEV</span>
+                        <div><h4 class="font-bold text-teal-900 dark:text-teal-400">BYD & GWM</h4><p class="text-xs text-teal-700 dark:text-teal-500">Disrupção EV</p></div><span class="text-sm font-bold">Top EV/PHEV</span>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- NOVO: Section 3 - Searchable Data Table -->
+        <!-- Section 3: Data Table (WITH SORTING) -->
         <section id="models-data" data-aos="fade-up">
             <div class="flex flex-col md:flex-row justify-between items-end mb-6 gap-4">
                 <div>
                     <h2 class="text-2xl font-bold text-slate-900 dark:text-white mb-2">Desempenho por Modelo</h2>
-                    <p class="text-slate-600 dark:text-slate-400 text-sm">Dados de vendas e posicionamento estratégico dos principais veículos.</p>
+                    <p class="text-slate-600 dark:text-slate-400 text-sm">Dados de vendas e posicionamento estratégico.</p>
                 </div>
-                <!-- Search Bar -->
                 <div class="relative w-full md:w-72">
                     <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                         <i class="fa-solid fa-search text-slate-400"></i>
                     </div>
-                    <input type="text" id="searchInput" placeholder="Buscar modelo, marca ou tipo..." 
-                        class="block w-full pl-10 pr-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg leading-5 bg-white dark:bg-slate-800 text-slate-900 dark:text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm transition-all shadow-sm">
+                    <input type="text" id="searchInput" placeholder="Buscar..." class="block w-full pl-10 pr-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all shadow-sm">
                 </div>
             </div>
 
@@ -231,14 +229,20 @@
                     <table class="min-w-full divide-y divide-slate-200 dark:divide-slate-700">
                         <thead class="bg-slate-50 dark:bg-slate-700/50">
                             <tr>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">Modelo</th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">Montadora</th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">Categoria</th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">Status</th>
+                                <th onclick="sortTable('model')" class="sortable px-6 py-3 text-left text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">
+                                    Modelo <i class="fa-solid fa-sort ml-1 opacity-50"></i>
+                                </th>
+                                <th onclick="sortTable('brand')" class="sortable px-6 py-3 text-left text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">
+                                    Montadora <i class="fa-solid fa-sort ml-1 opacity-50"></i>
+                                </th>
+                                <th onclick="sortTable('category')" class="sortable px-6 py-3 text-left text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">
+                                    Categoria <i class="fa-solid fa-sort ml-1 opacity-50"></i>
+                                </th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">Status</th>
                             </tr>
                         </thead>
                         <tbody id="carTableBody" class="bg-white dark:bg-slate-800 divide-y divide-slate-200 dark:divide-slate-700 text-sm">
-                            <!-- Rows will be populated by JS -->
+                            <!-- JS Generated -->
                         </tbody>
                     </table>
                 </div>
@@ -256,7 +260,7 @@
                     <div class="flex justify-between items-end mb-6">
                         <div>
                             <h2 class="text-2xl font-bold text-white mb-2">A Revolução Elétrica</h2>
-                            <p class="text-slate-400 text-sm">Crescimento exponencial de vendas de veículos eletrificados (HEV + PHEV + BEV).</p>
+                            <p class="text-slate-400 text-sm">Crescimento exponencial de vendas de veículos eletrificados.</p>
                         </div>
                         <div class="text-right">
                             <span class="block text-4xl font-bold text-emerald-400">200k+</span>
@@ -267,22 +271,16 @@
                         <canvas id="evChart"></canvas>
                     </div>
                 </div>
-                
                 <div class="lg:col-span-4 space-y-6">
                     <div class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 p-6 rounded-2xl shadow-md h-full flex flex-col justify-center">
-                        <div class="w-12 h-12 bg-emerald-100 dark:bg-emerald-900 rounded-full flex items-center justify-center text-emerald-600 dark:text-emerald-400 mb-4">
-                            <i class="fa-solid fa-plug text-xl"></i>
-                        </div>
+                        <div class="w-12 h-12 bg-emerald-100 dark:bg-emerald-900 rounded-full flex items-center justify-center text-emerald-600 dark:text-emerald-400 mb-4"><i class="fa-solid fa-plug text-xl"></i></div>
                         <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-2">Inversão de Mix</h3>
-                        <p class="text-slate-600 dark:text-slate-300 text-sm mb-4">
-                            Em 2024, veículos Plug-in (PHEV + BEV) passaram a representar <strong>81%</strong> das vendas de eletrificados.
-                        </p>
+                        <p class="text-slate-600 dark:text-slate-300 text-sm mb-4">Em 2024, veículos Plug-in (PHEV + BEV) passaram a representar <strong>81%</strong> das vendas.</p>
                         <div class="mt-auto pt-4 border-t border-slate-100 dark:border-slate-700">
                             <p class="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase mb-2">Top Models BEV</p>
                             <div class="flex flex-wrap gap-2">
                                 <span class="bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-200 px-2 py-1 rounded text-xs">Dolphin Mini</span>
                                 <span class="bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-200 px-2 py-1 rounded text-xs">Dolphin</span>
-                                <span class="bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-200 px-2 py-1 rounded text-xs">Volvo EX30</span>
                             </div>
                         </div>
                     </div>
@@ -297,7 +295,6 @@
                 Ciclo de Investimentos 2025-2030
             </h2>
             <div class="grid md:grid-cols-3 gap-6">
-                <!-- Card Stellantis -->
                 <div class="md:col-span-2 bg-blue-600 rounded-2xl p-8 text-white relative overflow-hidden group">
                     <div class="absolute right-0 top-0 w-64 h-64 bg-blue-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 -mr-16 -mt-16"></div>
                     <div class="relative z-10">
@@ -311,17 +308,14 @@
                         </div>
                     </div>
                 </div>
-                <!-- Card VW -->
                 <div class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl p-6 shadow-sm">
                     <div class="flex justify-between items-center mb-4"><h3 class="font-bold text-slate-900 dark:text-white text-lg">Volkswagen</h3><span class="text-blue-600 dark:text-blue-400 font-bold">R$ 16 Bi</span></div>
                     <p class="text-sm text-slate-600 dark:text-slate-400 mb-4">Plataforma MQB37 Híbrida. 100% eletrificação novos modelos.</p>
                 </div>
-                <!-- Card Toyota -->
                 <div class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl p-6 shadow-sm">
                     <div class="flex justify-between items-center mb-4"><h3 class="font-bold text-slate-900 dark:text-white text-lg">Toyota</h3><span class="text-red-600 dark:text-red-400 font-bold">R$ 11 Bi</span></div>
                     <p class="text-sm text-slate-600 dark:text-slate-400 mb-4">Lançamento Yaris Cross 2026 (1º SUV Compacto Híbrido Flex).</p>
                 </div>
-                <!-- Card GM -->
                 <div class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl p-6 shadow-sm">
                     <div class="flex justify-between items-center mb-4"><h3 class="font-bold text-slate-900 dark:text-white text-lg">GM</h3><span class="text-yellow-600 dark:text-yellow-400 font-bold">R$ 7 Bi</span></div>
                     <p class="text-sm text-slate-600 dark:text-slate-400 mb-4">Brasil estreia tecnologia Híbrida Flex da Chevrolet globalmente.</p>
@@ -337,40 +331,130 @@
         </div>
     </footer>
 
-    <!-- SCRIPTS E LÓGICA -->
     <script>
-        // --- 1. DARK MODE LOGIC ---
-        const themeToggleBtn = document.getElementById('theme-toggle');
-        const themeIcon = document.getElementById('theme-icon');
-        const themeToggleBtnMobile = document.getElementById('theme-toggle-mobile');
-        const themeIconMobile = document.getElementById('theme-icon-mobile');
+        // --- 1. CONFIGURAÇÃO GERAL (DEVE VIR PRIMEIRO) ---
+        // Inicializa animações AOS
+        AOS.init({ duration: 800, once: true, offset: 50 });
         
-        function updateIcons(isDark) {
-            const iconClass = isDark ? 'fa-sun' : 'fa-moon';
-            themeIcon.className = `fa-solid ${iconClass}`;
-            themeIconMobile.className = `fa-solid ${iconClass}`;
+        // Configuração de fontes globais
+        Chart.defaults.font.family = "'Inter', sans-serif";
+
+        // --- 2. VARIÁVEIS GLOBAIS DOS GRÁFICOS (PARA EVITAR ERROS) ---
+        let salesChart = null;
+        let shareChart = null;
+        let evChart = null;
+
+        // --- 3. DEFINIÇÃO DE CORES E TEMA ---
+        function getChartColors(theme) {
+            return {
+                text: theme === 'dark' ? '#cbd5e1' : '#64748b',
+                grid: theme === 'dark' ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)'
+            };
         }
 
-        function toggleTheme() {
-            const isDark = document.documentElement.classList.toggle('dark');
+        function updateChartColors(theme) {
+            const colors = getChartColors(theme);
+            Chart.defaults.color = colors.text;
+            
+            // Verifica se os gráficos existem antes de tentar atualizar
+            [salesChart, shareChart, evChart].forEach(c => {
+                if (c) {
+                   if(c.options.scales && c.options.scales.y) {
+                       c.options.scales.y.grid.color = colors.grid;
+                   }
+                   c.update();
+                }
+            });
+        }
+
+        // --- 4. DARK MODE LOGIC ---
+        const themeBtn = document.getElementById('theme-toggle');
+        const themeBtnMob = document.getElementById('theme-toggle-mobile');
+        
+        function updateTheme(isDark) {
+            const iconClass = isDark ? 'fa-sun' : 'fa-moon';
+            document.getElementById('theme-icon').className = `fa-solid ${iconClass}`;
+            document.getElementById('theme-icon-mobile').className = `fa-solid ${iconClass}`;
+            document.documentElement.classList.toggle('dark', isDark);
             localStorage.theme = isDark ? 'dark' : 'light';
-            updateIcons(isDark);
+            
+            // Chama atualização de cores dos gráficos
             updateChartColors(isDark ? 'dark' : 'light');
         }
 
-        themeToggleBtn.addEventListener('click', toggleTheme);
-        themeToggleBtnMobile.addEventListener('click', toggleTheme);
+        [themeBtn, themeBtnMob].forEach(btn => btn.addEventListener('click', () => {
+            updateTheme(!document.documentElement.classList.contains('dark'));
+        }));
 
-        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-            document.documentElement.classList.add('dark');
-            updateIcons(true);
-        } else {
-            document.documentElement.classList.remove('dark');
-            updateIcons(false);
+        // --- 5. INICIALIZAÇÃO DOS GRÁFICOS (EM ORDEM) ---
+        
+        // 5.1 Sales Chart
+        const salesData = {
+            annual: { labels: ['2022', '2023', '2024', '2025 (Proj)', '2030 (Proj)'], data: [2.10, 2.20, 2.65, 2.80, 3.10] },
+            semiannual: { labels: ['1º Sem 23', '2º Sem 23', '1º Sem 24', '2º Sem 24', '1º Sem 25'], data: [1.08, 1.12, 1.22, 1.43, 1.28] }
+        };
+        
+        const ctxSales = document.getElementById('salesChart');
+        if (ctxSales) {
+            salesChart = new Chart(ctxSales, {
+                type: 'line',
+                data: {
+                    labels: salesData.annual.labels,
+                    datasets: [{
+                        label: 'Vendas (Milhões)', data: salesData.annual.data,
+                        borderColor: '#2563eb', backgroundColor: 'rgba(37, 99, 235, 0.1)',
+                        borderWidth: 3, tension: 0.4, fill: true,
+                        pointBackgroundColor: '#fff', pointBorderColor: '#2563eb', pointBorderWidth: 2
+                    }]
+                },
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: false, grid: { borderDash: [5, 5] } }, x: { grid: { display: false } } } }
+            });
         }
 
-        // --- 2. DATA TABLE LOGIC ---
-        const carData = [
+        window.updateSalesData = function(period) {
+            if (!salesChart) return;
+            const isAnnual = period === 'annual';
+            document.getElementById('btn-annual').className = `px-4 py-1.5 text-xs font-semibold rounded-md shadow-sm transition-all ${isAnnual ? 'bg-white dark:bg-slate-600 text-blue-600 dark:text-white' : 'text-slate-500 dark:text-slate-400 hover:text-slate-900'}`;
+            document.getElementById('btn-semiannual').className = `px-4 py-1.5 text-xs font-semibold rounded-md shadow-sm transition-all ${!isAnnual ? 'bg-white dark:bg-slate-600 text-blue-600 dark:text-white' : 'text-slate-500 dark:text-slate-400 hover:text-slate-900'}`;
+            salesChart.data.labels = salesData[period].labels;
+            salesChart.data.datasets[0].data = salesData[period].data;
+            salesChart.update();
+        };
+
+        // 5.2 Share Chart
+        const ctxShare = document.getElementById('shareChart');
+        if (ctxShare) {
+            shareChart = new Chart(ctxShare, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Fiat', 'VW', 'GM', 'Hyundai', 'Toyota', 'Outros'],
+                    datasets: [{
+                        data: [21.2, 18.4, 13.1, 7.9, 6.7, 32.7],
+                        backgroundColor: ['#dc2626', '#2563eb', '#eab308', '#0ea5e9', '#ef4444', '#cbd5e1'], borderWidth: 0
+                    }]
+                },
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { usePointStyle: true, padding: 20 } } }, cutout: '70%' }
+            });
+        }
+
+        // 5.3 EV Chart
+        const ctxEV = document.getElementById('evChart');
+        if (ctxEV) {
+            evChart = new Chart(ctxEV, {
+                type: 'bar',
+                data: {
+                    labels: ['2022', '2023', '2024', '2025 (Ago)'],
+                    datasets: [{
+                        label: 'Vendas Eletrificados', data: [49245, 93927, 177358, 200000],
+                        backgroundColor: '#10b981', borderRadius: 6
+                    }]
+                },
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { grid: { color: 'rgba(255,255,255,0.1)' } }, x: { grid: { display: false } } } }
+            });
+        }
+
+        // --- 6. DATA TABLE LOGIC ---
+        let carData = [
             { model: "Fiat Strada", brand: "Fiat", category: "Picape", status: "<span class='text-green-600 dark:text-green-400 font-bold'>Líder Geral</span>" },
             { model: "Fiat Toro", brand: "Fiat", category: "Picape", status: "Top Seller" },
             { model: "VW Polo", brand: "Volkswagen", category: "Hatch", status: "<span class='text-blue-600 dark:text-blue-400 font-bold'>Líder Passeio</span>" },
@@ -387,178 +471,50 @@
             { model: "Nissan Kicks", brand: "Nissan", category: "SUV", status: "Estável" }
         ];
 
-        const tableBody = document.getElementById('carTableBody');
-        const searchInput = document.getElementById('searchInput');
-        const resultCount = document.getElementById('resultCount');
+        let sortDirection = { model: 1, brand: 1, category: 1 };
+        let currentData = [...carData];
 
         function renderTable(data) {
-            tableBody.innerHTML = '';
-            data.forEach(car => {
-                const row = `
-                    <tr class="hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors">
-                        <td class="px-6 py-4 whitespace-nowrap font-medium text-slate-900 dark:text-white">${car.model}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-slate-500 dark:text-slate-300">${car.brand}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-slate-500 dark:text-slate-300">${car.category}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-slate-500 dark:text-slate-300">${car.status}</td>
-                    </tr>
-                `;
-                tableBody.insertAdjacentHTML('beforeend', row);
-            });
-            resultCount.textContent = `Mostrando ${data.length} resultados`;
+            const body = document.getElementById('carTableBody');
+            body.innerHTML = data.map(car => `
+                <tr class="hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors">
+                    <td class="px-6 py-4 whitespace-nowrap font-medium text-slate-900 dark:text-white">${car.model}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-slate-500 dark:text-slate-300">${car.brand}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-slate-500 dark:text-slate-300">${car.category}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-slate-500 dark:text-slate-300">${car.status}</td>
+                </tr>`).join('');
+            document.getElementById('resultCount').textContent = `Mostrando ${data.length} resultados`;
         }
 
-        searchInput.addEventListener('input', (e) => {
+        window.sortTable = function(key) {
+            sortDirection[key] *= -1;
+            currentData.sort((a, b) => {
+                if(a[key] < b[key]) return -1 * sortDirection[key];
+                if(a[key] > b[key]) return 1 * sortDirection[key];
+                return 0;
+            });
+            renderTable(currentData);
+        };
+
+        document.getElementById('searchInput').addEventListener('input', (e) => {
             const term = e.target.value.toLowerCase();
-            const filtered = carData.filter(car => 
-                car.model.toLowerCase().includes(term) || 
-                car.brand.toLowerCase().includes(term) ||
-                car.category.toLowerCase().includes(term)
+            currentData = carData.filter(c => 
+                c.model.toLowerCase().includes(term) || 
+                c.brand.toLowerCase().includes(term) ||
+                c.category.toLowerCase().includes(term)
             );
-            renderTable(filtered);
+            renderTable(currentData);
         });
 
-        // Render initial table
-        renderTable(carData);
+        renderTable(currentData);
 
-
-        // --- 3. CHART CONFIG & INTERACTIVITY ---
-        AOS.init({ duration: 800, once: true, offset: 50 });
-        Chart.defaults.font.family = "'Inter', sans-serif";
-        
-        // Colors & Theme Update Function
-        function getChartColors(theme) {
-            return {
-                text: theme === 'dark' ? '#cbd5e1' : '#64748b',
-                grid: theme === 'dark' ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)'
-            };
+        // --- 7. VERIFICAÇÃO FINAL DE TEMA (APÓS TUDO CARREGADO) ---
+        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            updateTheme(true);
+        } else {
+            // Garante que as cores iniciais do gráfico estejam corretas para o modo light
+            updateChartColors('light');
         }
-
-        // Global Chart instances
-        let salesChart, shareChart, evChart;
-
-        function updateChartColors(theme) {
-            const colors = getChartColors(theme);
-            Chart.defaults.color = colors.text;
-            
-            [salesChart, shareChart, evChart].forEach(chart => {
-                if(chart) {
-                    if (chart.options.scales.y) chart.options.scales.y.grid.color = colors.grid;
-                    chart.update();
-                }
-            });
-        }
-
-        // --- SALES CHART DATA & TOGGLE LOGIC ---
-        const salesData = {
-            annual: {
-                labels: ['2022', '2023', '2024', '2025 (Proj)', '2030 (Proj)'],
-                data: [2.10, 2.20, 2.65, 2.80, 3.10]
-            },
-            semiannual: {
-                labels: ['1º Sem 2023', '2º Sem 2023', '1º Sem 2024', '2º Sem 2024', '1º Sem 2025'],
-                data: [1.08, 1.12, 1.22, 1.43, 1.28] // Dados inferidos do relatório (2º sem 24 forte)
-            }
-        };
-
-        const ctxSales = document.getElementById('salesChart').getContext('2d');
-        salesChart = new Chart(ctxSales, {
-            type: 'line',
-            data: {
-                labels: salesData.annual.labels,
-                datasets: [{
-                    label: 'Vendas (Milhões)',
-                    data: salesData.annual.data,
-                    borderColor: '#2563eb',
-                    backgroundColor: 'rgba(37, 99, 235, 0.1)',
-                    borderWidth: 3,
-                    tension: 0.4,
-                    fill: true,
-                    pointBackgroundColor: '#fff',
-                    pointBorderColor: '#2563eb',
-                    pointBorderWidth: 2,
-                    pointRadius: 5
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: { legend: { display: false } },
-                scales: {
-                    y: { beginAtZero: false, grid: { borderDash: [5, 5] } },
-                    x: { grid: { display: false } }
-                }
-            }
-        });
-
-        // Function called by buttons HTML
-        window.updateSalesData = function(period) {
-            const btnAnnual = document.getElementById('btn-annual');
-            const btnSemi = document.getElementById('btn-semiannual');
-            
-            // UI Update
-            if (period === 'annual') {
-                btnAnnual.className = "px-4 py-1.5 text-xs font-semibold rounded-md bg-white dark:bg-slate-600 text-blue-600 dark:text-white shadow-sm transition-all";
-                btnSemi.className = "px-4 py-1.5 text-xs font-semibold rounded-md text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-all";
-                
-                salesChart.data.labels = salesData.annual.labels;
-                salesChart.data.datasets[0].data = salesData.annual.data;
-            } else {
-                btnSemi.className = "px-4 py-1.5 text-xs font-semibold rounded-md bg-white dark:bg-slate-600 text-blue-600 dark:text-white shadow-sm transition-all";
-                btnAnnual.className = "px-4 py-1.5 text-xs font-semibold rounded-md text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-all";
-                
-                salesChart.data.labels = salesData.semiannual.labels;
-                salesChart.data.datasets[0].data = salesData.semiannual.data;
-            }
-            salesChart.update();
-        };
-
-        // --- MARKET SHARE CHART ---
-        const ctxShare = document.getElementById('shareChart').getContext('2d');
-        shareChart = new Chart(ctxShare, {
-            type: 'doughnut',
-            data: {
-                labels: ['Fiat', 'VW', 'GM', 'Hyundai', 'Toyota', 'Outros'],
-                datasets: [{
-                    data: [21.2, 18.4, 13.1, 7.9, 6.7, 32.7],
-                    backgroundColor: ['#dc2626', '#2563eb', '#eab308', '#0ea5e9', '#ef4444', '#cbd5e1'],
-                    borderWidth: 0
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: { legend: { position: 'bottom', labels: { usePointStyle: true, padding: 20 } } },
-                cutout: '70%'
-            }
-        });
-
-        // --- EV CHART ---
-        const ctxEV = document.getElementById('evChart').getContext('2d');
-        evChart = new Chart(ctxEV, {
-            type: 'bar',
-            data: {
-                labels: ['2022', '2023', '2024', '2025 (Ago)'],
-                datasets: [{
-                    label: 'Vendas Eletrificados',
-                    data: [49245, 93927, 177358, 200000],
-                    backgroundColor: '#10b981',
-                    borderRadius: 6,
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: { legend: { display: false } },
-                scales: {
-                    y: { grid: { color: 'rgba(255,255,255,0.1)' } },
-                    x: { grid: { display: false } }
-                }
-            }
-        });
-        
-        // Initial Theme Apply
-        const initialTheme = document.documentElement.classList.contains('dark') ? 'dark' : 'light';
-        updateChartColors(initialTheme);
 
     </script>
 </body>
