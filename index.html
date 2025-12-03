@@ -2,7 +2,7 @@
 <html lang="pt-BR" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>João Ataide Moura | Automotive Intelligence</title>
     <meta name="description" content="Dashboard BI Automotivo. Análise de Market Share e Tendências.">
     
@@ -16,6 +16,9 @@
                     colors: {
                         brand: { 500: '#2563eb', 600: '#1d4ed8', 900: '#1e3a8a' },
                         slate: { 850: '#1e293b', 900: '#0f172a', 950: '#020617' }
+                    },
+                    screens: {
+                        'xs': '375px', // Breakpoint extra para celulares pequenos
                     }
                 }
             }
@@ -26,12 +29,17 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
     <style>
-        body { font-family: 'Inter', sans-serif; }
+        body { font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
+        
+        /* Ocultar scrollbar mas manter funcionalidade */
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        
+        /* Animações suaves */
         .fade-enter { animation: fadeIn 0.4s ease-in-out; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         
+        /* Estados Ativos */
         .nav-item.active { 
             background-color: rgba(37, 99, 235, 0.1); 
             border-right: 3px solid #2563eb;
@@ -46,68 +54,85 @@
             color: white;
             border-color: #2563eb;
         }
+
+        /* Classe utilitária para menu mobile fullscreen */
+        .mobile-menu-open {
+            position: fixed;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 50;
+        }
     </style>
 </head>
-<body class="bg-slate-50 text-slate-800 antialiased dark:bg-slate-950 dark:text-slate-100 h-screen flex overflow-hidden">
+<body class="bg-slate-50 text-slate-800 antialiased dark:bg-slate-950 dark:text-slate-100 h-screen flex overflow-hidden selection:bg-brand-500 selection:text-white">
 
-    <aside class="w-64 bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 flex-shrink-0 flex flex-col transition-all hidden md:flex z-20 shadow-2xl md:shadow-none">
-        <div class="h-16 flex items-center px-6 border-b border-slate-200 dark:border-slate-800">
+    <aside id="sidebar" class="bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 flex-shrink-0 flex flex-col transition-all hidden md:flex md:w-64 z-40 shadow-2xl md:shadow-none">
+        
+        <div class="h-16 flex items-center justify-between px-6 border-b border-slate-200 dark:border-slate-800">
             <div class="flex items-center gap-2 font-bold text-lg tracking-tight text-slate-900 dark:text-white">
                 <div class="bg-brand-600 p-1.5 rounded text-white">
                     <i data-lucide="bar-chart-2" class="w-5 h-5"></i>
                 </div>
                 <span>Auto<span class="text-brand-500">Intel</span></span>
             </div>
+            <button onclick="toggleMenu()" class="md:hidden p-2 text-slate-500 hover:bg-slate-100 rounded-full">
+                <i data-lucide="x" class="w-6 h-6"></i>
+            </button>
         </div>
 
         <div class="p-4 overflow-y-auto flex-1 space-y-1">
             <div class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2 px-2">Dashboards</div>
-            <button onclick="switchView('overview')" id="nav-overview" class="nav-item active w-full flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-slate-600 dark:text-slate-400 rounded-md hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors text-left">
-                <i data-lucide="layout-dashboard" class="w-4 h-4"></i>
+            
+            <button onclick="switchView('overview')" id="nav-overview" class="nav-item active w-full flex items-center gap-3 px-4 py-3 md:py-2 text-base md:text-sm font-medium text-slate-600 dark:text-slate-400 rounded-md hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors text-left">
+                <i data-lucide="layout-dashboard" class="w-5 h-5 md:w-4 md:h-4"></i>
                 Visão Geral
             </button>
 
             <div class="mt-6 text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2 px-2">Montadoras</div>
-            <div id="brand-nav-container" class="space-y-1"></div>
+            
+            <div id="brand-nav-container" class="space-y-2 md:space-y-1"></div>
         </div>
 
-        <div class="p-4 border-t border-slate-200 dark:border-slate-800">
+        <div class="p-4 border-t border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/50">
             <div class="flex items-center gap-3">
-                <div class="w-8 h-8 rounded-full bg-brand-100 dark:bg-brand-900 flex items-center justify-center text-brand-700 dark:text-brand-300 font-bold text-xs">JM</div>
-                <div class="text-sm"><p class="font-medium text-slate-900 dark:text-white">João Ataide Moura</p></div>
+                <div class="w-10 h-10 md:w-8 md:h-8 rounded-full bg-brand-100 dark:bg-brand-900 flex items-center justify-center text-brand-700 dark:text-brand-300 font-bold text-sm md:text-xs">JM</div>
+                <div class="text-sm">
+                    <p class="font-medium text-slate-900 dark:text-white">João Ataide Moura</p>
+                </div>
             </div>
         </div>
     </aside>
 
-    <div class="md:hidden fixed top-0 w-full bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 z-50 px-4 h-16 flex items-center justify-between shadow-sm">
-        <span class="font-bold text-slate-900 dark:text-white flex items-center gap-2">
-            <i data-lucide="bar-chart-2" class="text-brand-600 w-5 h-5"></i>
+    <div class="md:hidden fixed top-0 w-full bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 z-30 px-4 h-16 flex items-center justify-between shadow-sm">
+        <span class="font-bold text-slate-900 dark:text-white flex items-center gap-2 text-lg">
+            <i data-lucide="bar-chart-2" class="text-brand-600 w-6 h-6"></i>
             João A. Moura
         </span>
-        <button onclick="const aside = document.querySelector('aside'); aside.classList.toggle('hidden'); aside.classList.toggle('fixed'); aside.classList.toggle('h-full'); aside.classList.toggle('z-50');" class="p-2 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg">
-            <i data-lucide="menu" class="w-6 h-6"></i>
+        <button onclick="toggleMenu()" class="p-2 text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg active:scale-95 transition-transform">
+            <i data-lucide="menu" class="w-7 h-7"></i>
         </button>
     </div>
 
     <main class="flex-1 overflow-x-hidden overflow-y-auto bg-slate-50 dark:bg-slate-950 relative pt-16 md:pt-0">
         
-        <header class="sticky top-0 z-10 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 px-4 md:px-8 py-4 flex justify-between items-center">
-            <h2 id="page-title" class="text-lg md:text-xl font-bold text-slate-800 dark:text-white truncate max-w-[200px] md:max-w-none">Visão Geral</h2>
+        <header class="sticky top-0 z-20 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 px-4 md:px-8 py-3 flex justify-between items-center">
+            <h2 id="page-title" class="text-lg md:text-xl font-bold text-slate-800 dark:text-white truncate max-w-[220px] md:max-w-none">Visão Geral</h2>
             <div class="flex items-center gap-3">
-                <button id="theme-toggle" class="p-2 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-yellow-400 hover:ring-2 ring-brand-500 transition-all">
-                    <i data-lucide="moon" id="theme-icon" class="w-4 h-4"></i>
+                <button id="theme-toggle" class="p-2 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-yellow-400 hover:ring-2 ring-brand-500 transition-all active:scale-95">
+                    <i data-lucide="moon" id="theme-icon" class="w-5 h-5 md:w-4 md:h-4"></i>
                 </button>
-                <div class="h-4 w-px bg-slate-300 dark:bg-slate-700 mx-1 md:mx-2"></div>
+                <div class="h-4 w-px bg-slate-300 dark:bg-slate-700 mx-1"></div>
                 <span class="text-[10px] md:text-xs font-mono text-emerald-600 dark:text-emerald-400 bg-emerald-100 dark:bg-emerald-900/30 px-2 py-1 rounded whitespace-nowrap">LIVE: 2025</span>
             </div>
         </header>
 
-        <div class="p-4 md:p-8 max-w-7xl mx-auto min-h-screen">
+        <div class="p-3 md:p-8 max-w-7xl mx-auto min-h-screen pb-20 md:pb-8">
 
-            <div id="view-overview" class="space-y-8 fade-enter">
+            <div id="view-overview" class="space-y-6 md:space-y-8 fade-enter">
                 
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
-                    <div class="bg-white dark:bg-slate-800 p-6 rounded-xl shadow-sm border border-slate-100 dark:border-slate-700 relative overflow-hidden">
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <div class="bg-white dark:bg-slate-800 p-5 rounded-xl shadow-sm border border-slate-100 dark:border-slate-700 relative overflow-hidden">
                         <div class="absolute right-0 top-0 p-4 opacity-5 dark:opacity-10"><i data-lucide="trending-up" class="w-16 h-16"></i></div>
                         <p class="text-sm font-medium text-slate-500 dark:text-slate-400">Total Vendas (2025)</p>
                         <div class="flex items-baseline gap-2 mt-2">
@@ -115,21 +140,21 @@
                             <span class="text-xs font-bold text-emerald-600 bg-emerald-50 dark:bg-emerald-900/20 px-1.5 py-0.5 rounded">+7.5%</span>
                         </div>
                     </div>
-                    <div class="bg-white dark:bg-slate-800 p-6 rounded-xl shadow-sm border border-slate-100 dark:border-slate-700">
+                    <div class="bg-white dark:bg-slate-800 p-5 rounded-xl shadow-sm border border-slate-100 dark:border-slate-700">
                         <p class="text-sm font-medium text-slate-500 dark:text-slate-400">Líder de Mercado</p>
                         <div class="flex items-baseline gap-2 mt-2">
                             <span class="text-3xl font-bold text-slate-900 dark:text-white">Fiat</span>
                             <span class="text-sm font-medium text-slate-500">20.9%</span>
                         </div>
                     </div>
-                     <div class="bg-white dark:bg-slate-800 p-6 rounded-xl shadow-sm border border-slate-100 dark:border-slate-700">
+                     <div class="bg-white dark:bg-slate-800 p-5 rounded-xl shadow-sm border border-slate-100 dark:border-slate-700">
                         <p class="text-sm font-medium text-slate-500 dark:text-slate-400">Crescimento EV/HEV</p>
                         <div class="flex items-baseline gap-2 mt-2">
                             <span class="text-3xl font-bold text-slate-900 dark:text-white">5.2%</span>
                             <span class="text-xs font-bold text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded">BYD Leader</span>
                         </div>
                     </div>
-                     <div class="bg-white dark:bg-slate-800 p-6 rounded-xl shadow-sm border border-slate-100 dark:border-slate-700">
+                     <div class="bg-white dark:bg-slate-800 p-5 rounded-xl shadow-sm border border-slate-100 dark:border-slate-700">
                         <p class="text-sm font-medium text-slate-500 dark:text-slate-400">Região Dominante</p>
                         <div class="flex items-baseline gap-2 mt-2">
                             <span class="text-3xl font-bold text-slate-900 dark:text-white">Sudeste</span>
@@ -138,49 +163,49 @@
                     </div>
                 </div>
 
-                <div class="bg-white dark:bg-slate-800 p-6 rounded-xl shadow-lg border border-slate-100 dark:border-slate-700">
+                <div class="bg-white dark:bg-slate-800 p-4 md:p-6 rounded-xl shadow-lg border border-slate-100 dark:border-slate-700">
                     <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-4 flex items-center gap-2">
-                        <i data-lucide="bar-chart" class="text-brand-500 w-5 h-5"></i> Evolução Anual do Mercado
+                        <i data-lucide="bar-chart" class="text-brand-500 w-5 h-5"></i> Evolução Anual
                     </h3>
-                    <div class="relative h-64 md:h-80 w-full">
+                    <div class="relative h-60 md:h-80 w-full">
                         <canvas id="mainChart"></canvas>
                     </div>
                 </div>
 
-                <div class="grid lg:grid-cols-2 gap-8">
-                    <div class="bg-slate-900 text-white p-6 md:p-8 rounded-2xl shadow-xl">
+                <div class="grid lg:grid-cols-2 gap-6 md:gap-8">
+                    <div class="bg-slate-900 text-white p-6 rounded-2xl shadow-xl">
                          <div class="flex items-center gap-2 mb-6">
                             <i data-lucide="brain-circuit" class="text-yellow-400 w-6 h-6"></i>
                             <h3 class="text-xl font-bold">Insights Executivos</h3>
                         </div>
                         <ul class="space-y-4">
                             <li class="flex gap-3 text-sm text-slate-300">
-                                <i data-lucide="check-circle" class="w-5 h-5 text-emerald-400 shrink-0"></i>
+                                <i data-lucide="check-circle" class="w-5 h-5 text-emerald-400 shrink-0 mt-0.5"></i>
                                 <span><strong>Dominância Fiat (Agro):</strong> A Strada e Toro garantem à Fiat uma liderança confortável, especialmente nas regiões Centro-Oeste e Norte.</span>
                             </li>
                             <li class="flex gap-3 text-sm text-slate-300">
-                                <i data-lucide="alert-triangle" class="w-5 h-5 text-yellow-400 shrink-0"></i>
+                                <i data-lucide="alert-triangle" class="w-5 h-5 text-yellow-400 shrink-0 mt-0.5"></i>
                                 <span><strong>Ameaça Chinesa:</strong> BYD e GWM saíram de 0% para 5% em 24 meses. A projeção é que dobrem até 2026.</span>
                             </li>
                         </ul>
                     </div>
                     
-                    <div class="bg-white dark:bg-slate-800 rounded-xl shadow-lg border border-slate-200 dark:border-slate-700 p-6 overflow-hidden">
+                    <div class="bg-white dark:bg-slate-800 rounded-xl shadow-lg border border-slate-200 dark:border-slate-700 p-4 md:p-6 overflow-hidden">
                         <div class="flex justify-between items-center mb-4">
                             <h3 class="text-lg font-bold text-slate-900 dark:text-white">Ranking de Modelos</h3>
                         </div>
                         
-                        <div class="flex gap-2 mb-4 overflow-x-auto pb-2 no-scrollbar">
-                            <button onclick="filterRanking('all')" id="btn-all" class="filter-btn active px-3 py-1 text-xs font-semibold rounded-full border bg-white border-slate-200 text-slate-600 hover:bg-slate-50 transition-colors">Todos</button>
-                            <button onclick="filterRanking('Hatch')" id="btn-Hatch" class="filter-btn px-3 py-1 text-xs font-semibold rounded-full border bg-white border-slate-200 text-slate-600 hover:bg-slate-50 transition-colors">Hatches</button>
-                            <button onclick="filterRanking('SUV')" id="btn-SUV" class="filter-btn px-3 py-1 text-xs font-semibold rounded-full border bg-white border-slate-200 text-slate-600 hover:bg-slate-50 transition-colors">SUVs</button>
-                            <button onclick="filterRanking('Picape')" id="btn-Picape" class="filter-btn px-3 py-1 text-xs font-semibold rounded-full border bg-white border-slate-200 text-slate-600 hover:bg-slate-50 transition-colors">Picapes</button>
+                        <div class="flex gap-2 mb-4 overflow-x-auto pb-2 no-scrollbar touch-pan-x">
+                            <button onclick="filterRanking('all')" id="btn-all" class="filter-btn active flex-shrink-0 px-4 py-2 text-xs font-bold uppercase rounded-full border bg-white border-slate-200 text-slate-600 transition-colors">Todos</button>
+                            <button onclick="filterRanking('Hatch')" id="btn-Hatch" class="filter-btn flex-shrink-0 px-4 py-2 text-xs font-bold uppercase rounded-full border bg-white border-slate-200 text-slate-600 transition-colors">Hatches</button>
+                            <button onclick="filterRanking('SUV')" id="btn-SUV" class="filter-btn flex-shrink-0 px-4 py-2 text-xs font-bold uppercase rounded-full border bg-white border-slate-200 text-slate-600 transition-colors">SUVs</button>
+                            <button onclick="filterRanking('Picape')" id="btn-Picape" class="filter-btn flex-shrink-0 px-4 py-2 text-xs font-bold uppercase rounded-full border bg-white border-slate-200 text-slate-600 transition-colors">Picapes</button>
                         </div>
 
-                        <div class="overflow-x-auto">
+                        <div class="overflow-x-auto -mx-4 px-4 md:mx-0 md:px-0">
                             <table class="w-full text-sm text-left min-w-[300px]">
                                 <thead class="text-xs text-slate-500 uppercase bg-slate-50 dark:bg-slate-700/50">
-                                    <tr><th class="px-4 py-3">Modelo</th><th class="px-4 py-3">Vol.</th><th class="px-4 py-3">Trend</th></tr>
+                                    <tr><th class="px-3 py-3 rounded-tl-lg">Modelo</th><th class="px-3 py-3">Vol.</th><th class="px-3 py-3 rounded-tr-lg">Trend</th></tr>
                                 </thead>
                                 <tbody id="ranking-body" class="divide-y divide-slate-100 dark:divide-slate-700">
                                     </tbody>
@@ -190,50 +215,52 @@
                 </div>
             </div>
 
-            <div id="view-brand" class="hidden space-y-8 fade-enter">
-                <div class="bg-white dark:bg-slate-800 p-6 md:p-8 rounded-2xl shadow-sm border-l-8 transition-colors" id="brand-header-card">
-                    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+            <div id="view-brand" class="hidden space-y-6 md:space-y-8 fade-enter">
+                <div class="bg-white dark:bg-slate-800 p-6 md:p-8 rounded-2xl shadow-sm border-l-8 transition-colors relative overflow-hidden" id="brand-header-card">
+                    <div class="relative z-10 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                         <div>
-                            <span class="text-sm font-bold tracking-wider uppercase text-slate-400">Análise de Montadora</span>
-                            <h1 id="brand-title" class="text-3xl md:text-4xl font-black text-slate-900 dark:text-white mt-1">BRAND NAME</h1>
-                            <p class="text-slate-500 mt-2 text-sm md:text-base">Relatório consolidado de performance histórica.</p>
+                            <span class="text-xs font-bold tracking-wider uppercase text-slate-400">Análise de Montadora</span>
+                            <h1 id="brand-title" class="text-3xl md:text-5xl font-black text-slate-900 dark:text-white mt-1">BRAND</h1>
+                            <p class="text-slate-500 mt-2 text-sm md:text-base leading-relaxed max-w-xl">Relatório de performance.</p>
                         </div>
-                        <div class="text-left md:text-right w-full md:w-auto mt-4 md:mt-0">
-                            <p class="text-sm text-slate-500 dark:text-slate-400">Market Share 2025</p>
-                            <div class="text-4xl md:text-5xl font-black text-slate-900 dark:text-white tracking-tighter" id="brand-share-display">0.0%</div>
+                        <div class="flex items-center gap-4 bg-slate-50 dark:bg-slate-700/50 p-4 rounded-xl border border-slate-100 dark:border-slate-700">
+                            <div>
+                                <p class="text-xs text-slate-500 dark:text-slate-400 uppercase font-semibold">Share 2025</p>
+                                <div class="text-3xl md:text-4xl font-black text-slate-900 dark:text-white tracking-tighter" id="brand-share-display">0.0%</div>
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                <div class="grid lg:grid-cols-3 gap-8">
-                    <div class="lg:col-span-2 bg-white dark:bg-slate-800 p-6 rounded-xl shadow-lg border border-slate-100 dark:border-slate-700">
+                <div class="grid lg:grid-cols-3 gap-6 md:gap-8">
+                    <div class="lg:col-span-2 bg-white dark:bg-slate-800 p-4 md:p-6 rounded-xl shadow-lg border border-slate-100 dark:border-slate-700">
                         <div class="flex justify-between items-center mb-6">
-                            <h3 class="text-lg font-bold text-slate-900 dark:text-white">Curva de Evolução (2015-2025)</h3>
-                            <span class="px-3 py-1 rounded-full text-xs font-bold bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300">Share %</span>
+                            <h3 class="text-lg font-bold text-slate-900 dark:text-white">Curva de Evolução</h3>
+                            <span class="px-2 py-1 rounded text-[10px] font-bold bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 uppercase">Anual</span>
                         </div>
-                        <div class="relative h-64 md:h-80 w-full">
+                        <div class="relative h-60 md:h-80 w-full">
                             <canvas id="brandChart"></canvas>
                         </div>
                     </div>
 
                     <div class="lg:col-span-1 space-y-6">
-                        <div class="bg-indigo-50 dark:bg-slate-800 p-6 rounded-xl border border-indigo-100 dark:border-slate-700 relative">
+                        <div class="bg-indigo-50 dark:bg-slate-800 p-5 rounded-xl border border-indigo-100 dark:border-slate-700 relative">
                             <div class="absolute -top-3 -right-3 bg-white dark:bg-slate-700 p-2 rounded-lg shadow-sm border border-slate-100 dark:border-slate-600">
                                 <i data-lucide="lightbulb" class="w-5 h-5 text-yellow-500 fill-yellow-500"></i>
                             </div>
-                            <h4 class="font-bold text-indigo-900 dark:text-indigo-400 mb-3 uppercase text-xs tracking-wider">Diagnóstico Estratégico</h4>
+                            <h4 class="font-bold text-indigo-900 dark:text-indigo-400 mb-3 uppercase text-xs tracking-wider">Diagnóstico</h4>
                             <p id="brand-insight-text" class="text-slate-700 dark:text-slate-300 leading-relaxed text-sm">Insight...</p>
                         </div>
 
-                        <div class="bg-white dark:bg-slate-800 p-6 rounded-xl border border-slate-100 dark:border-slate-700">
-                            <h4 class="font-bold text-slate-500 dark:text-slate-400 mb-4 text-xs uppercase">Variação da Década</h4>
+                        <div class="bg-white dark:bg-slate-800 p-5 rounded-xl border border-slate-100 dark:border-slate-700">
+                            <h4 class="font-bold text-slate-500 dark:text-slate-400 mb-4 text-xs uppercase">Variação (10 anos)</h4>
                             <div class="flex items-center justify-between">
                                 <div><p class="text-xs text-slate-400">2015</p><p class="text-xl font-bold text-slate-700 dark:text-slate-300" id="stat-start">0%</p></div>
                                 <i data-lucide="arrow-right" class="text-slate-300"></i>
                                 <div class="text-right"><p class="text-xs text-slate-400">2025</p><p class="text-xl font-bold text-slate-900 dark:text-white" id="stat-end">0%</p></div>
                             </div>
                             <div class="mt-4 pt-4 border-t border-slate-100 dark:border-slate-700">
-                                <span id="stat-delta-badge" class="inline-block w-full text-center py-1 rounded text-sm font-bold bg-slate-100">0.0pp</span>
+                                <span id="stat-delta-badge" class="inline-block w-full text-center py-2 rounded-lg text-sm font-bold bg-slate-100">0.0pp</span>
                             </div>
                         </div>
                     </div>
@@ -244,49 +271,49 @@
     </main>
 
     <script>
-        // 1. DATA SOURCE (ATUALIZADA: FIAT E JEEP SEPARADOS)
+        // 1. DATA SOURCE (FIAT & JEEP SEPARADOS)
         const HistoricalData = {
              "Fiat": { 
                  "years": [2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025], 
                  "share": [17.7, 15.5, 13.5, 13.2, 13.8, 16.5, 21.8, 21.9, 21.8, 21.2, 20.9], 
                  "insight": "Líder absoluta de mercado. A força da Fiat vem do domínio no agronegócio com Strada e Toro, além do volume consistente de locadoras com Mobi e Argo.", 
-                 "color": "#ef4444" // Fiat Red
+                 "color": "#ef4444" 
              },
              "VW": { 
                  "years": [2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025], 
                  "share": [13.2, 11.5, 12.5, 14.9, 15.6, 16.8, 15.3, 13.7, 15.8, 16.5, 17.2], 
-                 "insight": "Executou uma virada estratégica (a 'Ofensiva SUV'). Em 2025, consolida-se na vice-liderança com o Polo liderando entre os hatches e forte presença do T-Cross.", 
-                 "color": "#1e3a8a" // VW Blue
+                 "insight": "Executou uma virada estratégica (a 'Ofensiva SUV'). Em 2025, consolida-se na vice-liderança com o Polo liderando entre os hatches.", 
+                 "color": "#1e3a8a" 
              },
              "GM": { 
                  "years": [2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025], 
                  "share": [15.8, 17.4, 18.1, 17.6, 17.1, 17.4, 11.3, 14.9, 15.0, 13.1, 11.5], 
-                 "insight": "Líder inconteste até 2020, a GM foca na recuperação de margem com Tracker e Montana, mas enfrenta forte concorrência chinesa no segmento de entrada.", 
-                 "color": "#ca8a04" // Chevy Gold
+                 "insight": "Líder inconteste até 2020, a GM foca na recuperação de margem com Tracker e Montana, mas enfrenta forte concorrência chinesa.", 
+                 "color": "#ca8a04" 
              },
              "Toyota": { 
                  "years": [2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025], 
                  "share": [6.9, 8.8, 8.6, 8.2, 8.1, 7.1, 8.7, 9.6, 9.8, 8.5, 7.8], 
-                 "insight": "Mantém operação de alta estabilidade e fidelidade. Sustenta margens elevadas com Hilux e Corolla Cross, apesar de volumes menores que as top 3.", 
-                 "color": "#dc2626" // Toyota Red
+                 "insight": "Mantém operação de alta estabilidade. Sustenta margens elevadas com Hilux e Corolla Cross, apesar de volumes menores.", 
+                 "color": "#dc2626" 
              },
              "Hyundai": { 
                  "years": [2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025], 
                  "share": [8.3, 9.9, 9.4, 9.1, 8.7, 8.6, 9.3, 9.0, 8.5, 8.2, 7.6], 
                  "insight": "Dependência concentrada nas famílias HB20 e Creta. A marca enfrenta o desafio de renovar o portfólio para enfrentar a agressividade da BYD.", 
-                 "color": "#0284c7" // Hyundai Blue
+                 "color": "#0284c7" 
              },
              "Jeep": { 
                  "years": [2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025], 
                  "share": [1.8, 2.5, 4.0, 5.2, 5.8, 5.4, 7.2, 6.8, 5.9, 5.5, 5.1], 
-                 "insight": "Marca de nicho que virou volume. Dominou os SUVs médios com o Compass por anos, mas agora sofre pressão com a chegada de rivais híbridos (Haval/Song Plus).", 
-                 "color": "#059669" // Jeep Green
+                 "insight": "Marca de nicho que virou volume. Dominou os SUVs médios com o Compass, mas agora sofre pressão com a chegada de rivais híbridos.", 
+                 "color": "#059669" 
              },
              "BYD": { 
                  "years": [2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025], 
                  "share": [0.0, 0.0, 0.0, 0.0, 0.0, 0.05, 0.1, 0.3, 1.2, 3.5, 5.2], 
-                 "insight": "O fenômeno da década. Crescimento exponencial a partir de 2023. Em 2025, já supera marcas tradicionais em meses específicos.", 
-                 "color": "#10b981" // BYD Teal
+                 "insight": "O fenômeno da década. Crescimento exponencial a partir de 2023 com a linha Dolphin e Song.", 
+                 "color": "#10b981" 
              }
         };
 
@@ -317,16 +344,28 @@
             renderRankingTable('all'); 
         });
 
-        // 4. NAVIGATION
+        // 4. NAVIGATION (MOBILE OPTIMIZED)
+        function toggleMenu() {
+            const sidebar = document.getElementById('sidebar');
+            // Toggle classes para transformar sidebar em menu fullscreen
+            if (sidebar.classList.contains('hidden')) {
+                sidebar.classList.remove('hidden');
+                sidebar.classList.add('mobile-menu-open'); // Classe CSS customizada
+            } else {
+                sidebar.classList.add('hidden');
+                sidebar.classList.remove('mobile-menu-open');
+            }
+        }
+
         function generateSidebarLinks() {
             const container = document.getElementById('brand-nav-container');
             const brands = Object.keys(HistoricalData);
             brands.forEach(brand => {
                 const btn = document.createElement('button');
-                btn.className = `nav-item w-full flex items-center gap-3 px-3 py-2 text-sm font-medium text-slate-600 dark:text-slate-400 rounded-md hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors text-left`;
+                btn.className = `nav-item w-full flex items-center gap-3 px-4 py-3 md:py-2 text-base md:text-sm font-medium text-slate-600 dark:text-slate-400 rounded-md hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors text-left`;
                 btn.id = `nav-${brand}`;
                 btn.onclick = () => switchView(brand);
-                btn.innerHTML = `<span class="w-2 h-2 rounded-full" style="background-color: ${HistoricalData[brand].color}"></span>${brand}`;
+                btn.innerHTML = `<span class="w-3 h-3 md:w-2 md:h-2 rounded-full" style="background-color: ${HistoricalData[brand].color}"></span>${brand}`;
                 container.appendChild(btn);
             });
         }
@@ -357,12 +396,11 @@
                 renderBrandDashboard(viewName);
             }
 
+            // AUTO-CLOSE MOBILE MENU
             if (window.innerWidth < 768) {
-                const aside = document.querySelector('aside');
-                if (!aside.classList.contains('hidden')) {
-                    aside.classList.add('hidden');
-                    aside.classList.remove('fixed', 'h-full', 'z-50'); 
-                }
+                const sidebar = document.getElementById('sidebar');
+                sidebar.classList.add('hidden');
+                sidebar.classList.remove('mobile-menu-open');
             }
         }
 
@@ -378,9 +416,9 @@
                 const trendIcon = car.trend === 'up' ? '<span class="text-emerald-500">▲</span>' : (car.trend === 'down' ? '<span class="text-red-500">▼</span>' : '<span class="text-slate-400">-</span>');
                 tbody.innerHTML += `
                     <tr class="dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700/30 transition-colors">
-                        <td class="px-4 py-3 font-medium">${car.model} <span class="text-[10px] text-slate-400 ml-1 border border-slate-200 dark:border-slate-600 rounded px-1">${car.cat}</span></td>
-                        <td class="px-4 py-3">${car.vol}</td>
-                        <td class="px-4 py-3">${trendIcon}</td>
+                        <td class="px-3 py-3 font-medium">${car.model} <div class="text-[10px] text-slate-400 font-normal md:hidden">${car.cat}</div></td>
+                        <td class="px-3 py-3 font-bold text-slate-700 dark:text-slate-200">${car.vol}</td>
+                        <td class="px-3 py-3 text-center">${trendIcon}</td>
                     </tr>`;
             });
         }
@@ -409,7 +447,7 @@
             document.getElementById('stat-end').innerText = end + '%';
             
             const badge = document.getElementById('stat-delta-badge');
-            badge.className = delta > 0 ? "inline-block w-full text-center py-1 rounded text-sm font-bold bg-emerald-100 text-emerald-700" : "inline-block w-full text-center py-1 rounded text-sm font-bold bg-red-100 text-red-700";
+            badge.className = delta > 0 ? "inline-block w-full text-center py-2 rounded-lg text-sm font-bold bg-emerald-100 text-emerald-700" : "inline-block w-full text-center py-2 rounded-lg text-sm font-bold bg-red-100 text-red-700";
             badge.innerText = delta > 0 ? `+${delta} pp (Crescimento)` : `${delta} pp (Retração)`;
 
             const ctx = document.getElementById('brandChart').getContext('2d');
