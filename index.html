@@ -27,16 +27,11 @@
 
     <style>
         body { font-family: 'Inter', sans-serif; }
-        
-        /* Custom Scrollbar for Sidebar */
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-        
-        /* Smooth Transitions */
         .fade-enter { animation: fadeIn 0.4s ease-in-out; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         
-        /* Sidebar Link Active State */
         .nav-item.active { 
             background-color: rgba(37, 99, 235, 0.1); 
             border-right: 3px solid #2563eb;
@@ -46,8 +41,6 @@
             background-color: rgba(37, 99, 235, 0.2);
             color: #60a5fa;
         }
-
-        /* Filter Button Active State */
         .filter-btn.active {
             background-color: #2563eb;
             color: white;
@@ -69,23 +62,19 @@
 
         <div class="p-4 overflow-y-auto flex-1 space-y-1">
             <div class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2 px-2">Dashboards</div>
-            
             <button onclick="switchView('overview')" id="nav-overview" class="nav-item active w-full flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-slate-600 dark:text-slate-400 rounded-md hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors text-left">
                 <i data-lucide="layout-dashboard" class="w-4 h-4"></i>
                 Visão Geral
             </button>
 
             <div class="mt-6 text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2 px-2">Montadoras</div>
-            
             <div id="brand-nav-container" class="space-y-1"></div>
         </div>
 
         <div class="p-4 border-t border-slate-200 dark:border-slate-800">
             <div class="flex items-center gap-3">
                 <div class="w-8 h-8 rounded-full bg-brand-100 dark:bg-brand-900 flex items-center justify-center text-brand-700 dark:text-brand-300 font-bold text-xs">JM</div>
-                <div class="text-sm">
-                    <p class="font-medium text-slate-900 dark:text-white">João Ataide Moura</p>
-                </div>
+                <div class="text-sm"><p class="font-medium text-slate-900 dark:text-white">João Ataide Moura</p></div>
             </div>
         </div>
     </aside>
@@ -129,8 +118,8 @@
                     <div class="bg-white dark:bg-slate-800 p-6 rounded-xl shadow-sm border border-slate-100 dark:border-slate-700">
                         <p class="text-sm font-medium text-slate-500 dark:text-slate-400">Líder de Mercado</p>
                         <div class="flex items-baseline gap-2 mt-2">
-                            <span class="text-3xl font-bold text-slate-900 dark:text-white">Stellantis</span>
-                            <span class="text-sm font-medium text-slate-500">29.8%</span>
+                            <span class="text-3xl font-bold text-slate-900 dark:text-white">Fiat</span>
+                            <span class="text-sm font-medium text-slate-500">20.9%</span>
                         </div>
                     </div>
                      <div class="bg-white dark:bg-slate-800 p-6 rounded-xl shadow-sm border border-slate-100 dark:border-slate-700">
@@ -167,7 +156,7 @@
                         <ul class="space-y-4">
                             <li class="flex gap-3 text-sm text-slate-300">
                                 <i data-lucide="check-circle" class="w-5 h-5 text-emerald-400 shrink-0"></i>
-                                <span><strong>Consolidação Stellantis:</strong> A estratégia multi-marca domina 30% do share, criando uma barreira de entrada alta.</span>
+                                <span><strong>Dominância Fiat (Agro):</strong> A Strada e Toro garantem à Fiat uma liderança confortável, especialmente nas regiões Centro-Oeste e Norte.</span>
                             </li>
                             <li class="flex gap-3 text-sm text-slate-300">
                                 <i data-lucide="alert-triangle" class="w-5 h-5 text-yellow-400 shrink-0"></i>
@@ -255,14 +244,50 @@
     </main>
 
     <script>
-        // 1. DATA SOURCE
+        // 1. DATA SOURCE (ATUALIZADA: FIAT E JEEP SEPARADOS)
         const HistoricalData = {
-             "VW": { "years": [2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025], "share": [13.2, 11.5, 12.5, 14.9, 15.6, 16.8, 15.3, 13.7, 15.8, 16.5, 17.2], "insight": "A Volkswagen executou uma virada estratégica de portfólio (a 'Ofensiva SUV'). Em 2025, consolida-se na vice-liderança com o Polo liderando entre os hatches.", "color": "#1e3a8a" },
-             "Stellantis": { "years": [2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025], "share": [22.5, 18.0, 17.5, 19.5, 21.8, 26.5, 31.0, 32.5, 31.4, 30.2, 29.8], "insight": "Dominância absoluta pós-fusão. A Fiat lidera o volume, a Jeep domina os SUVs médios e a RAM captura o segmento premium.", "color": "#003366" },
-             "GM": { "years": [2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025], "share": [15.8, 17.4, 18.1, 17.6, 17.1, 17.4, 11.3, 14.9, 15.0, 13.1, 11.5], "insight": "Líder inconteste até 2020, a GM foca na recuperação de margem com Tracker e Montana, mas enfrenta forte concorrência chinesa.", "color": "#ca8a04" },
-             "Toyota": { "years": [2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025], "share": [6.9, 8.8, 8.6, 8.2, 8.1, 7.1, 8.7, 9.6, 9.8, 8.5, 7.8], "insight": "A Toyota mantém uma operação de alta estabilidade e fidelidade. Sustenta margens elevadas apesar de volumes menores.", "color": "#dc2626" },
-             "Hyundai": { "years": [2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025], "share": [8.3, 9.9, 9.4, 9.1, 8.7, 8.6, 9.3, 9.0, 8.5, 8.2, 7.6], "insight": "Dependência concentrada nas famílias HB20 e Creta. A marca enfrenta saturação e a necessidade de renovar o portfólio.", "color": "#0284c7" },
-             "BYD": { "years": [2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025], "share": [0.0, 0.0, 0.0, 0.0, 0.0, 0.05, 0.1, 0.3, 1.2, 3.5, 5.2], "insight": "Crescimento exponencial a partir de 2023. Em 2025, já supera marcas tradicionais em meses específicos.", "color": "#10b981" }
+             "Fiat": { 
+                 "years": [2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025], 
+                 "share": [17.7, 15.5, 13.5, 13.2, 13.8, 16.5, 21.8, 21.9, 21.8, 21.2, 20.9], 
+                 "insight": "Líder absoluta de mercado. A força da Fiat vem do domínio no agronegócio com Strada e Toro, além do volume consistente de locadoras com Mobi e Argo.", 
+                 "color": "#ef4444" // Fiat Red
+             },
+             "VW": { 
+                 "years": [2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025], 
+                 "share": [13.2, 11.5, 12.5, 14.9, 15.6, 16.8, 15.3, 13.7, 15.8, 16.5, 17.2], 
+                 "insight": "Executou uma virada estratégica (a 'Ofensiva SUV'). Em 2025, consolida-se na vice-liderança com o Polo liderando entre os hatches e forte presença do T-Cross.", 
+                 "color": "#1e3a8a" // VW Blue
+             },
+             "GM": { 
+                 "years": [2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025], 
+                 "share": [15.8, 17.4, 18.1, 17.6, 17.1, 17.4, 11.3, 14.9, 15.0, 13.1, 11.5], 
+                 "insight": "Líder inconteste até 2020, a GM foca na recuperação de margem com Tracker e Montana, mas enfrenta forte concorrência chinesa no segmento de entrada.", 
+                 "color": "#ca8a04" // Chevy Gold
+             },
+             "Toyota": { 
+                 "years": [2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025], 
+                 "share": [6.9, 8.8, 8.6, 8.2, 8.1, 7.1, 8.7, 9.6, 9.8, 8.5, 7.8], 
+                 "insight": "Mantém operação de alta estabilidade e fidelidade. Sustenta margens elevadas com Hilux e Corolla Cross, apesar de volumes menores que as top 3.", 
+                 "color": "#dc2626" // Toyota Red
+             },
+             "Hyundai": { 
+                 "years": [2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025], 
+                 "share": [8.3, 9.9, 9.4, 9.1, 8.7, 8.6, 9.3, 9.0, 8.5, 8.2, 7.6], 
+                 "insight": "Dependência concentrada nas famílias HB20 e Creta. A marca enfrenta o desafio de renovar o portfólio para enfrentar a agressividade da BYD.", 
+                 "color": "#0284c7" // Hyundai Blue
+             },
+             "Jeep": { 
+                 "years": [2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025], 
+                 "share": [1.8, 2.5, 4.0, 5.2, 5.8, 5.4, 7.2, 6.8, 5.9, 5.5, 5.1], 
+                 "insight": "Marca de nicho que virou volume. Dominou os SUVs médios com o Compass por anos, mas agora sofre pressão com a chegada de rivais híbridos (Haval/Song Plus).", 
+                 "color": "#059669" // Jeep Green
+             },
+             "BYD": { 
+                 "years": [2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025], 
+                 "share": [0.0, 0.0, 0.0, 0.0, 0.0, 0.05, 0.1, 0.3, 1.2, 3.5, 5.2], 
+                 "insight": "O fenômeno da década. Crescimento exponencial a partir de 2023. Em 2025, já supera marcas tradicionais em meses específicos.", 
+                 "color": "#10b981" // BYD Teal
+             }
         };
 
         const RankingData = [
@@ -289,7 +314,7 @@
             initTheme();
             generateSidebarLinks();
             renderMainChart();
-            renderRankingTable('all'); // Inicializa tabela
+            renderRankingTable('all'); 
         });
 
         // 4. NAVIGATION
@@ -346,9 +371,7 @@
             const tbody = document.getElementById('ranking-body');
             tbody.innerHTML = '';
             
-            // Filter Logic
             const filtered = category === 'all' ? RankingData : RankingData.filter(i => i.cat === category);
-            // Sort Descending Volume
             filtered.sort((a, b) => parseInt(b.vol) - parseInt(a.vol));
 
             filtered.forEach(car => {
@@ -363,7 +386,6 @@
         }
 
         function filterRanking(cat) {
-            // Update UI buttons
             document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
             document.getElementById(`btn-${cat}`).classList.add('active');
             renderRankingTable(cat);
@@ -416,7 +438,6 @@
             });
         }
 
-        // 6. UTILS
         function initTheme() {
             if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) document.documentElement.classList.add('dark');
             document.getElementById('theme-toggle').addEventListener('click', () => {
