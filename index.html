@@ -3,10 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Automotive Intelligence 2025 | João Ataide Moura</title>
-    <meta name="description" content="Dashboard executivo do mercado automotivo brasileiro. KPIs, Market Share e Tendências Regionais.">
+    <title>João Ataide Moura | Automotive Intelligence</title>
+    <meta name="description" content="Dashboard BI Automotivo. Análise de Market Share e Tendências.">
     
-    <!-- STYLES & LIBS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -15,8 +14,8 @@
                 extend: {
                     fontFamily: { sans: ['Inter', 'sans-serif'] },
                     colors: {
-                        brand: { 500: '#2563eb', 600: '#1d4ed8' }, // Corporate Blue
-                        slate: { 850: '#1e293b', 900: '#0f172a' }
+                        brand: { 500: '#2563eb', 600: '#1d4ed8', 900: '#1e3a8a' },
+                        slate: { 850: '#1e293b', 900: '#0f172a', 950: '#020617' }
                     }
                 }
             }
@@ -28,588 +27,458 @@
 
     <style>
         body { font-family: 'Inter', sans-serif; }
-        .chart-wrapper { position: relative; height: 350px; width: 100%; }
         
-        /* Smooth UI Transitions */
-        body, div, nav, h1, h2, h3, p, span, td, tr, button {
-            transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+        /* Custom Scrollbar for Sidebar */
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        
+        /* Smooth Transitions */
+        .fade-enter { animation: fadeIn 0.4s ease-in-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        
+        /* Sidebar Link Active State */
+        .nav-item.active { 
+            background-color: rgba(37, 99, 235, 0.1); 
+            border-right: 3px solid #2563eb;
+            color: #2563eb;
         }
-
-        /* Glassmorphism for floating nav */
-        .glass-nav {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(12px);
-            border-bottom: 1px solid rgba(226, 232, 240, 0.8);
-        }
-        .dark .glass-nav {
-            background: rgba(15, 23, 42, 0.90);
-            border-bottom: 1px solid rgba(51, 65, 85, 0.5);
+        .dark .nav-item.active {
+            background-color: rgba(37, 99, 235, 0.2);
+            color: #60a5fa;
         }
     </style>
 </head>
-<body class="bg-slate-50 text-slate-800 antialiased dark:bg-slate-950 dark:text-slate-100">
+<body class="bg-slate-50 text-slate-800 antialiased dark:bg-slate-950 dark:text-slate-100 h-screen flex overflow-hidden">
 
-    <!-- NAVBAR -->
-    <nav class="fixed w-full z-50 glass-nav transition-colors">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between h-16 items-center">
-                <div class="flex items-center gap-3">
-                    <div class="bg-brand-600 p-1.5 rounded-lg text-white shadow-lg shadow-brand-500/30">
-                        <i data-lucide="bar-chart-2" class="w-5 h-5"></i>
-                    </div>
-                    <!-- NOME ALTERADO CONFORME SOLICITADO -->
-                    <span class="font-bold text-lg tracking-tight text-slate-900 dark:text-white">
-                        João Ataide <span class="text-brand-500">Moura</span>
-                    </span>
+    <aside class="w-64 bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 flex-shrink-0 flex flex-col transition-all hidden md:flex z-20">
+        <div class="h-16 flex items-center px-6 border-b border-slate-200 dark:border-slate-800">
+            <div class="flex items-center gap-2 font-bold text-lg tracking-tight text-slate-900 dark:text-white">
+                <div class="bg-brand-600 p-1.5 rounded text-white">
+                    <i data-lucide="bar-chart-2" class="w-5 h-5"></i>
                 </div>
-                
-                <div class="flex items-center gap-4">
-                    <div class="hidden md:flex gap-6 text-sm font-medium text-slate-500 dark:text-slate-400">
-                        <a href="#overview" class="hover:text-brand-600 dark:hover:text-white transition-colors">KPIs</a>
-                        <a href="#market" class="hover:text-brand-600 dark:hover:text-white transition-colors">Mercado</a>
-                        <a href="#regional" class="hover:text-brand-600 dark:hover:text-white transition-colors">Regional</a>
-                        <a href="#insights" class="hover:text-brand-600 dark:hover:text-white transition-colors">Insights</a>
-                    </div>
-                    <div class="h-6 w-px bg-slate-200 dark:bg-slate-700 mx-2"></div>
-                    <button id="theme-toggle" class="p-2 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-yellow-400 hover:ring-2 ring-brand-500 transition-all">
-                        <i data-lucide="moon" id="theme-icon" class="w-4 h-4"></i>
-                    </button>
+                <span>Auto<span class="text-brand-500">Intel</span></span>
+            </div>
+        </div>
+
+        <div class="p-4 overflow-y-auto flex-1 space-y-1">
+            <div class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2 px-2">Dashboards</div>
+            
+            <button onclick="switchView('overview')" id="nav-overview" class="nav-item active w-full flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-slate-600 dark:text-slate-400 rounded-md hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors text-left">
+                <i data-lucide="layout-dashboard" class="w-4 h-4"></i>
+                Visão Geral
+            </button>
+
+            <div class="mt-6 text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2 px-2">Montadoras</div>
+            
+            <div id="brand-nav-container" class="space-y-1">
+                </div>
+        </div>
+
+        <div class="p-4 border-t border-slate-200 dark:border-slate-800">
+            <div class="flex items-center gap-3">
+                <div class="w-8 h-8 rounded-full bg-brand-100 dark:bg-brand-900 flex items-center justify-center text-brand-700 dark:text-brand-300 font-bold text-xs">JM</div>
+                <div class="text-sm">
+                    <p class="font-medium text-slate-900 dark:text-white">João Ataide Moura</p>
+                    <p class="text-xs text-slate-500">Engenheiro de Dados</p>
                 </div>
             </div>
         </div>
-    </nav>
+    </aside>
 
-    <!-- HEADER / HERO -->
-    <header class="pt-32 pb-12 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
-                <div>
-                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 text-xs font-semibold mb-4 border border-green-200 dark:border-green-800">
-                        <span class="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></span>
-                        Live Data: Nov 2025
-                    </div>
-                    <h1 class="text-3xl md:text-5xl font-bold tracking-tight text-slate-900 dark:text-white mb-2">
-                        Performance Automotiva
-                    </h1>
-                    <p class="text-slate-500 dark:text-slate-400 max-w-2xl text-lg">
-                        Análise executiva de volume, geografia e tendências consolidadas.
-                    </p>
-                </div>
+    <div class="md:hidden fixed top-0 w-full bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 z-50 px-4 h-16 flex items-center justify-between">
+        <span class="font-bold text-slate-900 dark:text-white">João A. Moura</span>
+        <button onclick="document.querySelector('aside').classList.toggle('hidden'); document.querySelector('aside').classList.toggle('fixed'); document.querySelector('aside').classList.toggle('h-full');" class="p-2 text-slate-600 dark:text-slate-300">
+            <i data-lucide="menu" class="w-6 h-6"></i>
+        </button>
+    </div>
+
+    <main class="flex-1 overflow-x-hidden overflow-y-auto bg-slate-50 dark:bg-slate-950 relative pt-16 md:pt-0">
+        
+        <header class="sticky top-0 z-10 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 px-8 py-4 flex justify-between items-center">
+            <h2 id="page-title" class="text-xl font-bold text-slate-800 dark:text-white">Visão Geral do Mercado</h2>
+            <div class="flex items-center gap-3">
+                <button id="theme-toggle" class="p-2 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-yellow-400 hover:ring-2 ring-brand-500 transition-all">
+                    <i data-lucide="moon" id="theme-icon" class="w-4 h-4"></i>
+                </button>
+                <div class="h-4 w-px bg-slate-300 dark:bg-slate-700 mx-2"></div>
+                <span class="text-xs font-mono text-emerald-600 dark:text-emerald-400 bg-emerald-100 dark:bg-emerald-900/30 px-2 py-1 rounded">LIVE: 2025</span>
+            </div>
+        </header>
+
+        <div class="p-4 md:p-8 max-w-7xl mx-auto min-h-screen">
+
+            <div id="view-overview" class="space-y-8 fade-enter">
                 
-                <div class="flex items-center gap-2">
-                    <button onclick="window.print()" class="flex items-center gap-2 px-4 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm font-medium hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors">
-                        <i data-lucide="printer" class="w-4 h-4"></i> Report PDF
-                    </button>
-                </div>
-            </div>
-        </div>
-    </header>
-
-    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-16">
-
-        <!-- 1. KPI SECTION -->
-        <section id="overview" class="animate-fade-in">
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                <!-- KPI 1 -->
-                <div class="bg-white dark:bg-slate-800 p-6 rounded-xl shadow-sm border border-slate-100 dark:border-slate-700 relative overflow-hidden group hover:border-brand-500 transition-colors">
-                    <div class="absolute right-0 top-0 p-4 opacity-5 dark:opacity-10 group-hover:scale-110 transition-transform">
-                        <i data-lucide="trending-up" class="w-16 h-16"></i>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <div class="bg-white dark:bg-slate-800 p-6 rounded-xl shadow-sm border border-slate-100 dark:border-slate-700 relative overflow-hidden">
+                        <div class="absolute right-0 top-0 p-4 opacity-5 dark:opacity-10"><i data-lucide="trending-up" class="w-16 h-16"></i></div>
+                        <p class="text-sm font-medium text-slate-500 dark:text-slate-400">Total Vendas (2025)</p>
+                        <div class="flex items-baseline gap-2 mt-2">
+                            <span class="text-3xl font-bold text-slate-900 dark:text-white">2.85 Mi</span>
+                            <span class="text-xs font-bold text-emerald-600 bg-emerald-50 dark:bg-emerald-900/20 px-1.5 py-0.5 rounded">+7.5%</span>
+                        </div>
                     </div>
-                    <p class="text-sm font-medium text-slate-500 dark:text-slate-400">Total Vendas (2025 Est.)</p>
-                    <div class="flex items-baseline gap-2 mt-2">
-                        <span class="text-3xl font-bold text-slate-900 dark:text-white" id="kpi-total">2.85 Mi</span>
-                        <span class="text-xs font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-900/20 px-1.5 py-0.5 rounded">+7.5%</span>
+                    <div class="bg-white dark:bg-slate-800 p-6 rounded-xl shadow-sm border border-slate-100 dark:border-slate-700">
+                        <p class="text-sm font-medium text-slate-500 dark:text-slate-400">Líder de Mercado</p>
+                        <div class="flex items-baseline gap-2 mt-2">
+                            <span class="text-3xl font-bold text-slate-900 dark:text-white">Stellantis</span>
+                            <span class="text-sm font-medium text-slate-500">29.8%</span>
+                        </div>
                     </div>
-                </div>
-
-                <!-- KPI 2 -->
-                <div class="bg-white dark:bg-slate-800 p-6 rounded-xl shadow-sm border border-slate-100 dark:border-slate-700 group hover:border-emerald-500 transition-colors">
-                    <p class="text-sm font-medium text-slate-500 dark:text-slate-400">Share Elétricos/Híbridos</p>
-                    <div class="flex items-baseline gap-2 mt-2">
-                        <span class="text-3xl font-bold text-slate-900 dark:text-white">7.7%</span>
-                        <span class="text-xs font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-900/20 px-1.5 py-0.5 rounded">+1.2pp</span>
+                     <div class="bg-white dark:bg-slate-800 p-6 rounded-xl shadow-sm border border-slate-100 dark:border-slate-700">
+                        <p class="text-sm font-medium text-slate-500 dark:text-slate-400">Crescimento EV/HEV</p>
+                        <div class="flex items-baseline gap-2 mt-2">
+                            <span class="text-3xl font-bold text-slate-900 dark:text-white">5.2%</span>
+                            <span class="text-xs font-bold text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded">BYD Leader</span>
+                        </div>
+                    </div>
+                     <div class="bg-white dark:bg-slate-800 p-6 rounded-xl shadow-sm border border-slate-100 dark:border-slate-700">
+                        <p class="text-sm font-medium text-slate-500 dark:text-slate-400">Região Dominante</p>
+                        <div class="flex items-baseline gap-2 mt-2">
+                            <span class="text-3xl font-bold text-slate-900 dark:text-white">Sudeste</span>
+                            <span class="text-sm font-medium text-slate-500">51.8%</span>
+                        </div>
                     </div>
                 </div>
 
-                <!-- KPI 3 -->
-                <div class="bg-white dark:bg-slate-800 p-6 rounded-xl shadow-sm border border-slate-100 dark:border-slate-700 group hover:border-amber-500 transition-colors">
-                    <p class="text-sm font-medium text-slate-500 dark:text-slate-400">Líder de Mercado</p>
-                    <div class="flex items-baseline gap-2 mt-2">
-                        <span class="text-3xl font-bold text-slate-900 dark:text-white">Fiat</span>
-                        <span class="text-sm font-medium text-slate-500 dark:text-slate-400">20.9%</span>
-                    </div>
-                </div>
-
-                <!-- KPI 4 -->
-                <div class="bg-white dark:bg-slate-800 p-6 rounded-xl shadow-sm border border-slate-100 dark:border-slate-700 group hover:border-indigo-500 transition-colors">
-                    <p class="text-sm font-medium text-slate-500 dark:text-slate-400">Região Dominante</p>
-                    <div class="flex items-baseline gap-2 mt-2">
-                        <span class="text-3xl font-bold text-slate-900 dark:text-white">Sudeste</span>
-                        <span class="text-sm font-medium text-slate-500 dark:text-slate-400">51.8%</span>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- 2. MARKET ANALYSIS CHART (ORIGINAL) -->
-        <section id="market" class="grid lg:grid-cols-12 gap-8">
-            <div class="lg:col-span-12">
                 <div class="bg-white dark:bg-slate-800 p-6 rounded-xl shadow-lg border border-slate-100 dark:border-slate-700">
-                    <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
-                        <div>
-                            <h3 class="text-xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
-                                <i data-lucide="activity" class="text-brand-500 w-5 h-5"></i>
-                                Evolução Nacional
-                            </h3>
-                            <p class="text-sm text-slate-500">Série histórica ajustada sazonalmente.</p>
-                        </div>
-                        <div class="flex items-center gap-3">
-                             <select id="yearSelect" onchange="renderChart()" class="hidden bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 text-sm rounded-lg px-3 py-1.5 outline-none">
-                                <option value="2025">2025</option>
-                                <option value="2024">2024</option>
-                                <option value="2020">2020</option>
-                            </select>
-                            <div class="flex bg-slate-100 dark:bg-slate-900 p-1 rounded-lg border border-slate-200 dark:border-slate-700">
-                                <button onclick="setChartMode('annual')" id="btn-annual" class="px-4 py-1.5 text-sm font-semibold rounded-md transition-all shadow-sm bg-white dark:bg-slate-700 text-brand-600 dark:text-white">Anual</button>
-                                <button onclick="setChartMode('monthly')" id="btn-monthly" class="px-4 py-1.5 text-sm font-semibold rounded-md transition-all text-slate-500 dark:text-slate-400">Mensal</button>
-                                <button onclick="setChartMode('brands')" id="btn-brands" class="px-4 py-1.5 text-sm font-semibold rounded-md transition-all text-slate-500 dark:text-slate-400">Share</button>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="chart-wrapper">
+                    <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-4 flex items-center gap-2">
+                        <i data-lucide="bar-chart" class="text-brand-500 w-5 h-5"></i> Evolução Anual do Mercado
+                    </h3>
+                    <div class="relative h-80 w-full">
                         <canvas id="mainChart"></canvas>
                     </div>
-                    <div class="mt-6 p-4 rounded-lg bg-slate-50 dark:bg-slate-700/30 border-l-4 border-brand-500 flex gap-4 items-start">
-                        <i data-lucide="lightbulb" class="w-5 h-5 text-brand-500 shrink-0 mt-0.5"></i>
-                        <p id="chart-insight" class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed"></p>
-                    </div>
                 </div>
-            </div>
-        </section>
 
-        <!-- 3. NOVO GRÁFICO: REGIONAL ANALYSIS -->
-        <section id="regional" class="grid lg:grid-cols-12 gap-8">
-            <div class="lg:col-span-12">
-                <div class="bg-white dark:bg-slate-800 p-6 rounded-xl shadow-lg border border-slate-100 dark:border-slate-700">
+                <div class="grid lg:grid-cols-2 gap-8">
+                    <div class="bg-slate-900 text-white p-8 rounded-2xl shadow-xl">
+                         <div class="flex items-center gap-2 mb-6">
+                            <i data-lucide="brain-circuit" class="text-yellow-400 w-6 h-6"></i>
+                            <h3 class="text-xl font-bold">Insights Executivos</h3>
+                        </div>
+                        <ul class="space-y-4">
+                            <li class="flex gap-3 text-sm text-slate-300">
+                                <i data-lucide="check-circle" class="w-5 h-5 text-emerald-400 shrink-0"></i>
+                                <span><strong>Consolidação Stellantis:</strong> A estratégia multi-marca (Fiat/Jeep/Ram) domina 30% do share, criando uma barreira de entrada alta para novos players.</span>
+                            </li>
+                            <li class="flex gap-3 text-sm text-slate-300">
+                                <i data-lucide="alert-triangle" class="w-5 h-5 text-yellow-400 shrink-0"></i>
+                                <span><strong>Ameaça Chinesa:</strong> BYD e GWM saíram de 0% para 5% em 24 meses. A projeção é que dobrem até 2026, pressionando margens da VW e GM.</span>
+                            </li>
+                            <li class="flex gap-3 text-sm text-slate-300">
+                                <i data-lucide="trending-up" class="w-5 h-5 text-blue-400 shrink-0"></i>
+                                <span><strong>SUVização:</strong> Sedãs compactos perdem relevância. O ticket médio do setor subiu 18% com a migração do consumidor para SUVs de entrada.</span>
+                            </li>
+                        </ul>
+                    </div>
                     
-                    <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
+                    <div class="bg-white dark:bg-slate-800 rounded-xl shadow-lg border border-slate-200 dark:border-slate-700 p-6 overflow-hidden">
+                        <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-4">Top 5 Modelos (YTD)</h3>
+                        <table class="w-full text-sm text-left">
+                            <thead class="text-xs text-slate-500 uppercase bg-slate-50 dark:bg-slate-700/50">
+                                <tr><th class="px-4 py-3">Modelo</th><th class="px-4 py-3">Vol.</th><th class="px-4 py-3">Trend</th></tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-100 dark:divide-slate-700">
+                                <tr class="dark:text-slate-300"><td class="px-4 py-3 font-medium">Fiat Strada</td><td class="px-4 py-3">120k</td><td class="px-4 py-3 text-emerald-500">▲</td></tr>
+                                <tr class="dark:text-slate-300"><td class="px-4 py-3 font-medium">VW Polo</td><td class="px-4 py-3">110k</td><td class="px-4 py-3 text-emerald-500">▲</td></tr>
+                                <tr class="dark:text-slate-300"><td class="px-4 py-3 font-medium">Chev. Onix</td><td class="px-4 py-3">95k</td><td class="px-4 py-3 text-slate-400">-</td></tr>
+                                <tr class="dark:text-slate-300"><td class="px-4 py-3 font-medium">HB20</td><td class="px-4 py-3">88k</td><td class="px-4 py-3 text-red-500">▼</td></tr>
+                                <tr class="dark:text-slate-300"><td class="px-4 py-3 font-medium">VW T-Cross</td><td class="px-4 py-3">72k</td><td class="px-4 py-3 text-emerald-500">▲</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div id="view-brand" class="hidden space-y-8 fade-enter">
+                <div class="bg-white dark:bg-slate-800 p-8 rounded-2xl shadow-sm border-l-8 transition-colors" id="brand-header-card">
+                    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                         <div>
-                            <h3 class="text-xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
-                                <i data-lucide="map" class="text-indigo-500 w-5 h-5"></i>
-                                Inteligência Regional
-                            </h3>
-                            <p class="text-sm text-slate-500">Distribuição geográfica, tendência e mix de produtos por região.</p>
+                            <span class="text-sm font-bold tracking-wider uppercase text-slate-400">Análise de Montadora</span>
+                            <h1 id="brand-title" class="text-4xl font-black text-slate-900 dark:text-white mt-1">BRAND NAME</h1>
+                            <p class="text-slate-500 mt-2">Relatório consolidado de performance histórica e posicionamento estratégico.</p>
                         </div>
-                        
-                        <div class="flex items-center gap-3">
-                            <div class="flex bg-slate-100 dark:bg-slate-900 p-1 rounded-lg border border-slate-200 dark:border-slate-700">
-                                <button onclick="setRegionalChartMode('share')" id="btn-reg-share" class="px-4 py-1.5 text-sm font-semibold rounded-md transition-all shadow-sm bg-white dark:bg-slate-700 text-indigo-600 dark:text-white">Share Região</button>
-                                <button onclick="setRegionalChartMode('trend')" id="btn-reg-trend" class="px-4 py-1.5 text-sm font-semibold rounded-md transition-all text-slate-500 dark:text-slate-400">Tendência</button>
-                                <button onclick="setRegionalChartMode('models')" id="btn-reg-models" class="px-4 py-1.5 text-sm font-semibold rounded-md transition-all text-slate-500 dark:text-slate-400">Top 10 Mix</button>
+                        <div class="text-right">
+                            <p class="text-sm text-slate-500 dark:text-slate-400">Market Share 2025</p>
+                            <div class="text-5xl font-black text-slate-900 dark:text-white tracking-tighter" id="brand-share-display">0.0%</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid lg:grid-cols-3 gap-8">
+                    <div class="lg:col-span-2 bg-white dark:bg-slate-800 p-6 rounded-xl shadow-lg border border-slate-100 dark:border-slate-700">
+                        <div class="flex justify-between items-center mb-6">
+                            <h3 class="text-lg font-bold text-slate-900 dark:text-white">Curva de Evolução (2015-2025)</h3>
+                            <span class="px-3 py-1 rounded-full text-xs font-bold bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300">Share %</span>
+                        </div>
+                        <div class="relative h-80 w-full">
+                            <canvas id="brandChart"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="lg:col-span-1 space-y-6">
+                        <div class="bg-indigo-50 dark:bg-slate-800 p-6 rounded-xl border border-indigo-100 dark:border-slate-700 relative">
+                            <div class="absolute -top-3 -right-3 bg-white dark:bg-slate-700 p-2 rounded-lg shadow-sm border border-slate-100 dark:border-slate-600">
+                                <i data-lucide="lightbulb" class="w-5 h-5 text-yellow-500 fill-yellow-500"></i>
+                            </div>
+                            <h4 class="font-bold text-indigo-900 dark:text-indigo-400 mb-3 uppercase text-xs tracking-wider">Diagnóstico Estratégico</h4>
+                            <p id="brand-insight-text" class="text-slate-700 dark:text-slate-300 leading-relaxed text-sm">
+                                </p>
+                        </div>
+
+                        <div class="bg-white dark:bg-slate-800 p-6 rounded-xl border border-slate-100 dark:border-slate-700">
+                            <h4 class="font-bold text-slate-500 dark:text-slate-400 mb-4 text-xs uppercase">Variação da Década</h4>
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="text-xs text-slate-400">2015</p>
+                                    <p class="text-xl font-bold text-slate-700 dark:text-slate-300" id="stat-start">0%</p>
+                                </div>
+                                <i data-lucide="arrow-right" class="text-slate-300"></i>
+                                <div class="text-right">
+                                    <p class="text-xs text-slate-400">2025</p>
+                                    <p class="text-xl font-bold text-slate-900 dark:text-white" id="stat-end">0%</p>
+                                </div>
+                            </div>
+                            <div class="mt-4 pt-4 border-t border-slate-100 dark:border-slate-700">
+                                <span id="stat-delta-badge" class="inline-block w-full text-center py-1 rounded text-sm font-bold bg-slate-100">0.0pp</span>
                             </div>
                         </div>
                     </div>
-
-                    <div class="chart-wrapper">
-                        <canvas id="regionalChart"></canvas>
-                    </div>
-
-                    <!-- Dynamic Regional Insight -->
-                    <div class="mt-6 p-4 rounded-lg bg-indigo-50 dark:bg-indigo-900/20 border-l-4 border-indigo-500 flex gap-4 items-start">
-                        <i data-lucide="compass" class="w-5 h-5 text-indigo-500 shrink-0 mt-0.5"></i>
-                        <div>
-                            <h4 class="text-sm font-bold text-slate-900 dark:text-white mb-1">Análise Geográfica</h4>
-                            <p id="regional-insight" class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
-                                <!-- JS Injects content here -->
-                            </p>
-                        </div>
-                    </div>
                 </div>
             </div>
-        </section>
 
-        <!-- 4. NOVO TÓPICO: INSIGHTS ESTRATÉGICOS ELEVADOS -->
-        <section id="insights">
-            <div class="bg-gradient-to-br from-slate-900 to-slate-800 rounded-2xl p-8 text-white shadow-2xl border border-slate-700">
-                <div class="flex items-center gap-3 mb-8 border-b border-slate-700 pb-4">
-                    <div class="p-2 bg-yellow-500/20 rounded-lg">
-                        <i data-lucide="brain-circuit" class="w-6 h-6 text-yellow-400"></i>
-                    </div>
-                    <h2 class="text-2xl font-bold">Insights Estratégicos Consolidados</h2>
-                </div>
-
-                <div class="grid md:grid-cols-3 gap-8">
-                    <!-- Coluna 1 -->
-                    <div class="space-y-4">
-                        <h4 class="text-indigo-400 font-semibold uppercase text-xs tracking-wider">Oportunidade & Crescimento</h4>
-                        <ul class="space-y-3">
-                            <li class="flex gap-3 items-start">
-                                <i data-lucide="check-circle-2" class="w-5 h-5 text-emerald-400 shrink-0 mt-0.5"></i>
-                                <span class="text-sm text-slate-300"><strong class="text-white">Regionalização do Mix:</strong> A liderança da Fiat se deve à penetração no Centro-Oeste e Norte (Agro). Oportunidade para concorrentes lançarem picapes médias com foco específico nestas regiões, onde o ticket médio é 15% superior.</span>
-                            </li>
-                            <li class="flex gap-3 items-start">
-                                <i data-lucide="check-circle-2" class="w-5 h-5 text-emerald-400 shrink-0 mt-0.5"></i>
-                                <span class="text-sm text-slate-300"><strong class="text-white">Eletrificação Urbana:</strong> 85% das vendas de EVs estão concentradas no eixo Sul-Sudeste. A saturação da infraestrutura nestes locais exige foco imediato em expansão de carregamento para capilarizar vendas no interior.</span>
-                            </li>
-                        </ul>
-                    </div>
-
-                    <!-- Coluna 2 -->
-                    <div class="space-y-4">
-                        <h4 class="text-orange-400 font-semibold uppercase text-xs tracking-wider">Riscos & Ameaças</h4>
-                        <ul class="space-y-3">
-                            <li class="flex gap-3 items-start">
-                                <i data-lucide="alert-triangle" class="w-5 h-5 text-orange-400 shrink-0 mt-0.5"></i>
-                                <span class="text-sm text-slate-300"><strong class="text-white">Canibalização de Sedãs:</strong> A categoria de Sedãs compactos perdeu 4pp de share para SUVs de entrada (ex: Pulse/Kardian). Manter linhas de produção de sedãs antigos (ex: Voyage/Logan) tornou-se financeiramente ineficiente.</span>
-                            </li>
-                             <li class="flex gap-3 items-start">
-                                <i data-lucide="alert-triangle" class="w-5 h-5 text-orange-400 shrink-0 mt-0.5"></i>
-                                <span class="text-sm text-slate-300"><strong class="text-white">Entrada Chinesa Agressiva:</strong> BYD e GWM já dominam 5% do market share no Sudeste. A projeção indica que atingirão 10% nacional até 2026, pressionando margens das montadoras tradicionais em segmentos acima de R$ 150k.</span>
-                            </li>
-                        </ul>
-                    </div>
-
-                    <!-- Coluna 3 -->
-                    <div class="space-y-4">
-                        <h4 class="text-blue-400 font-semibold uppercase text-xs tracking-wider">Forecast Executivo</h4>
-                        <div class="bg-slate-800/50 p-4 rounded-lg border border-slate-700">
-                            <div class="flex justify-between items-center mb-2">
-                                <span class="text-sm font-medium">Projeção 2026</span>
-                                <span class="text-xs bg-blue-500/20 text-blue-300 px-2 py-0.5 rounded">Otimista</span>
-                            </div>
-                            <div class="text-3xl font-bold mb-1">3.05 Mi</div>
-                            <p class="text-xs text-slate-400">Retomada dos níveis pré-2015, impulsionada pela redução da taxa Selic e crédito facilitado.</p>
-                        </div>
-                        <p class="text-sm text-slate-400 italic">"O mercado não é mais sobre volume total, mas sobre dominar nichos rentáveis (SUVs e Picapes) nas geografias corretas."</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- 5. RANKING TABLE -->
-        <section id="ranking">
-            <div class="bg-white dark:bg-slate-800 rounded-xl shadow-lg border border-slate-200 dark:border-slate-700 overflow-hidden">
-                <div class="p-6 border-b border-slate-200 dark:border-slate-700 flex justify-between items-center">
-                    <h3 class="text-lg font-bold text-slate-900 dark:text-white">Ranking de Modelos (Top 25)</h3>
-                    <input type="text" id="searchInput" placeholder="Buscar..." class="bg-slate-100 dark:bg-slate-900 border-none rounded-lg px-4 py-2 text-sm w-48 focus:ring-2 focus:ring-brand-500">
-                </div>
-                <div class="overflow-x-auto">
-                    <table class="min-w-full divide-y divide-slate-200 dark:divide-slate-700">
-                        <thead class="bg-slate-50 dark:bg-slate-900">
-                            <tr>
-                                <th class="px-6 py-3 text-left text-xs font-bold text-slate-500 uppercase">Rank</th>
-                                <th class="px-6 py-3 text-left text-xs font-bold text-slate-500 uppercase">Modelo</th>
-                                <th class="px-6 py-3 text-left text-xs font-bold text-slate-500 uppercase">Categoria</th>
-                                <th class="px-6 py-3 text-left text-xs font-bold text-slate-500 uppercase">Performance</th>
-                            </tr>
-                        </thead>
-                        <tbody id="rankingTable" class="bg-white dark:bg-slate-800 divide-y divide-slate-100 dark:divide-slate-700 text-sm"></tbody>
-                    </table>
-                </div>
-                <div class="px-6 py-4 flex justify-between items-center bg-slate-50 dark:bg-slate-800/50">
-                     <span class="text-xs text-slate-500">Página <span id="currentPage">1</span></span>
-                     <div class="flex gap-2">
-                        <button onclick="changePage(-1)" class="p-1.5 bg-white dark:bg-slate-700 border dark:border-slate-600 rounded shadow-sm"><i data-lucide="chevron-left" class="w-4 h-4"></i></button>
-                        <button onclick="changePage(1)" class="p-1.5 bg-white dark:bg-slate-700 border dark:border-slate-600 rounded shadow-sm"><i data-lucide="chevron-right" class="w-4 h-4"></i></button>
-                     </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- 6. EV TREND -->
-        <section id="ev">
-            <div class="bg-gradient-to-br from-slate-900 via-slate-800 to-indigo-950 p-8 rounded-2xl text-white shadow-2xl relative">
-                <h2 class="text-2xl font-bold flex items-center gap-2 mb-4">
-                    <i data-lucide="zap" class="text-yellow-400 fill-yellow-400"></i> Evolução Eletrificados
-                </h2>
-                <div class="chart-wrapper" style="height: 300px;">
-                    <canvas id="evChart"></canvas>
-                </div>
-            </div>
-        </section>
-
+        </div>
     </main>
 
-    <footer class="bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 py-12 mt-12">
-        <div class="max-w-7xl mx-auto px-4 text-center">
-            <p class="text-sm text-slate-500 dark:text-slate-400 mb-2">&copy; 2025 AutoIntel Analytics.</p>
-            <p class="text-xs text-slate-400 dark:text-slate-500">Dados demonstrativos (Base Fenabrave/Anfavea).</p>
-        </div>
-    </footer>
-
-    <!-- JAVASCRIPT LOGIC -->
     <script>
-        // --- 1. MOCK API LAYER (Data Source with Regional Data) ---
-        const fetchDashboardData = () => {
-            return new Promise((resolve) => {
-                setTimeout(() => {
-                    resolve({
-                        years: ['2015', '2016', '2017', '2018', '2019', '2020', '2021', '2022', '2023', '2024', '2025'],
-                        annualData: [2.57, 2.05, 2.24, 2.57, 2.79, 2.06, 1.97, 2.10, 2.30, 2.65, 2.85],
-                        brandsData: {
-                            Fiat: [17.7, 15.5, 13.5, 13.2, 13.8, 16.5, 21.8, 21.9, 21.8, 21.2, 20.9],
-                            GM: [15.9, 17.4, 18.1, 17.6, 17.1, 17.4, 11.3, 14.9, 15.0, 13.1, 13.5],
-                            VW: [13.8, 11.5, 12.5, 14.9, 15.6, 16.8, 15.3, 13.7, 15.8, 16.5, 18.1],
-                            Toyota: [6.9, 8.8, 8.6, 8.2, 8.1, 7.1, 8.7, 9.6, 9.8, 8.5, 7.8]
-                        },
-                        monthlyData: {
-                            '2020': [193, 201, 163, 55, 62, 132, 174, 183, 207, 215, 225, 243],
-                            '2024': [161, 165, 187, 220, 194, 214, 241, 237, 236, 264, 260, 275],
-                            '2025': [185, 190, 215, 235, 248, 255, 270, 282, 290, 305, 310]
-                        },
-                        // NOVO: DADOS REGIONAIS
-                        regionalData: {
-                            share: [51.8, 18.2, 16.5, 9.4, 4.1], // SE, S, NE, CO, N
-                            labels: ['Sudeste', 'Sul', 'Nordeste', 'Centro-Oeste', 'Norte'],
-                            trend: {
-                                'Sudeste': [130, 135, 140, 145, 150, 152, 155, 158, 160, 165, 168],
-                                'Sul': [45, 46, 48, 47, 49, 50, 52, 51, 53, 54, 55],
-                                'Nordeste': [40, 41, 42, 43, 42, 44, 45, 46, 47, 48, 49],
-                                'Centro-Oeste': [22, 23, 24, 25, 26, 28, 29, 30, 31, 32, 33], // Forte crescimento
-                                'Norte': [10, 11, 11, 12, 12, 12, 13, 13, 13, 14, 14]
-                            },
-                            // Top 10 Models Mix per Region (Stacked Bar Data structure)
-                            top10Mix: {
-                                labels: ['Strada', 'Polo', 'Onix', 'HB20', 'T-Cross', 'Tracker', 'Creta', 'Hilux', 'Mobi', 'Kicks'],
-                                regions: {
-                                    'Sudeste': [3500, 6000, 5500, 4800, 4200, 3800, 3500, 1200, 2500, 2800], // Hatchs fortes
-                                    'Sul': [1500, 2000, 1800, 1500, 1200, 1100, 1000, 800, 500, 600],
-                                    'Nordeste': [2000, 1800, 2200, 1800, 1500, 1200, 1300, 900, 1200, 1000], // Onix forte
-                                    'Centro-Oeste': [3000, 800, 600, 700, 900, 500, 600, 2500, 300, 400], // Strada/Hilux dominam (Agro)
-                                    'Norte': [1000, 400, 500, 400, 300, 200, 300, 1100, 200, 200]
-                                }
-                            }
-                        },
-                        ranking: [
-                            { r: 1, m: "Fiat Strada", b: "Fiat", c: "Picape", s: "Líder" },
-                            { r: 2, m: "VW Polo", b: "Volkswagen", c: "Hatch", s: "Alta" },
-                            { r: 3, m: "Chevrolet Onix", b: "GM", c: "Hatch", s: "Estável" },
-                            { r: 4, m: "Hyundai HB20", b: "Hyundai", c: "Hatch", s: "Estável" },
-                            { r: 5, m: "VW T-Cross", b: "Volkswagen", c: "SUV", s: "Líder SUV" },
-                            { r: 6, m: "Tracker", b: "GM", c: "SUV", s: "Competitivo" },
-                            { r: 7, m: "Creta", b: "Hyundai", c: "SUV", s: "Premium" },
-                            { r: 8, m: "Hilux", b: "Toyota", c: "Picape", s: "Agro" },
-                            { r: 9, m: "Mobi", b: "Fiat", c: "Hatch", s: "Entrada" },
-                            { r: 10, m: "Kicks", b: "Nissan", c: "SUV", s: "Fim Ciclo" },
-                            { r: 11, m: "Compass", b: "Jeep", c: "SUV Médio", s: "Líder Cat" },
-                            { r: 12, m: "Nivus", b: "VW", c: "SUV Cupê", s: "Nicho" },
-                            { r: 13, m: "Toro", b: "Fiat", c: "Picape", s: "Urbana" },
-                            { r: 14, m: "Corolla Cross", b: "Toyota", c: "SUV Hib", s: "Crescimento" },
-                            { r: 15, m: "HR-V", b: "Honda", c: "SUV", s: "Estável" },
-                            { r: 16, m: "Song Plus", b: "BYD", c: "SUV PHEV", s: "Disruptivo" },
-                            { r: 17, m: "Renegade", b: "Jeep", c: "SUV", s: "Queda" },
-                            { r: 18, m: "Onix Plus", b: "GM", c: "Sedã", s: "Líder Sedã" },
-                            { r: 19, m: "Fastback", b: "Fiat", c: "SUV Cupê", s: "Turbo" },
-                            { r: 20, m: "Dolphin", b: "BYD", c: "Elétrico", s: "Popular EV" },
-                            { r: 21, m: "Haval H6", b: "GWM", c: "SUV HEV", s: "Forte" },
-                            { r: 22, m: "Corolla", b: "Toyota", c: "Sedã", s: "Clássico" },
-                            { r: 23, m: "Kwid", b: "Renault", c: "Hatch", s: "Entrada" },
-                            { r: 24, m: "Rampage", b: "Ram", c: "Picape", s: "Premium" },
-                            { r: 25, m: "Yaris", b: "Toyota", c: "Hatch", s: "Frotista" }
-                        ]
-                    });
-                }, 100);
-            });
+        // --- 1. DATA SOURCE (HARD DATA FROM REQUIREMENTS) ---
+        const HistoricalData = {
+             "VW": {
+               "years": [2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025],
+               "share": [13.2, 11.5, 12.5, 14.9, 15.6, 16.8, 15.3, 13.7, 15.8, 16.5, 17.2],
+               "insight": "A Volkswagen executou uma virada estratégica de portfólio (a 'Ofensiva SUV'), substituindo o volume do Gol pela rentabilidade do T-Cross e Nivus. Em 2025, consolida-se na vice-liderança com o Polo liderando entre os hatches.",
+               "color": "#1e3a8a" // VW Blue
+             },
+             "Stellantis": {
+               "years": [2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025],
+               "share": [22.5, 18.0, 17.5, 19.5, 21.8, 26.5, 31.0, 32.5, 31.4, 30.2, 29.8],
+               "insight": "Dominância absoluta pós-fusão. A Fiat lidera o volume (Agro/Locadoras), a Jeep domina os SUVs médios e a RAM captura o segmento premium. A estratégia 'House of Brands' cobre 100% dos segmentos de preço.",
+               "color": "#003366" // Stellantis Navy
+             },
+             "GM": {
+               "years": [2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025],
+               "share": [15.8, 17.4, 18.1, 17.6, 17.1, 17.4, 11.3, 14.9, 15.0, 13.1, 11.5],
+               "insight": "Líder inconteste até 2020, a GM sofreu severamente com a crise dos semicondutores (2021). Atualmente, foca na recuperação de margem com Tracker e Montana, mas enfrenta forte concorrência chinesa no segmento de entrada.",
+               "color": "#ca8a04" // Chevy Gold
+             },
+             "Toyota": {
+               "years": [2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025],
+               "share": [6.9, 8.8, 8.6, 8.2, 8.1, 7.1, 8.7, 9.6, 9.8, 8.5, 7.8],
+               "insight": "A Toyota mantém uma operação de alta estabilidade e fidelidade. Pioneira nos híbridos flex com Corolla Cross, sustenta margens elevadas apesar de volumes menores que as líderes.",
+               "color": "#dc2626" // Toyota Red
+             },
+             "Hyundai": {
+               "years": [2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025],
+               "share": [8.3, 9.9, 9.4, 9.1, 8.7, 8.6, 9.3, 9.0, 8.5, 8.2, 7.6],
+               "insight": "Dependência concentrada nas famílias HB20 e Creta. Embora ambos sejam best-sellers, a marca enfrenta saturação e a necessidade de renovar o portfólio para enfrentar a BYD e GWM.",
+               "color": "#0284c7" // Hyundai Blue
+             },
+             "BYD": {
+               "years": [2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025],
+               "share": [0.0, 0.0, 0.0, 0.0, 0.0, 0.05, 0.1, 0.3, 1.2, 3.5, 5.2],
+               "insight": "O fenômeno disruptivo da década. Crescimento exponencial a partir de 2023 com Dolphin e Song Plus. Em 2025, já supera marcas tradicionais (Honda/Nissan) em meses específicos, consolidando a era da eletrificação.",
+               "color": "#10b981" // BYD Green
+             }
         };
 
-        // --- 2. STATE MANAGEMENT ---
-        let appData = null;
-        let chartInstance = null;
-        let regionalChartInstance = null; // New Instance
-        let evChartInstance = null;
-        let chartMode = 'annual';
-        let regionalChartMode = 'share'; // New State: 'share' | 'trend' | 'models'
-        let tablePage = 1;
-        const rowsPerPage = 5;
+        // --- 2. GLOBAL STATE ---
+        let mainChartInstance = null;
+        let brandChartInstance = null;
+        let currentTab = 'overview';
 
-        // --- 3. CONTROLLERS ---
-        async function initDashboard() {
+        // --- 3. INITIALIZATION ---
+        document.addEventListener('DOMContentLoaded', () => {
             lucide.createIcons();
             initTheme();
-            appData = await fetchDashboardData();
+            generateSidebarLinks();
+            renderMainChart(); // Render initial overview chart
+        });
+
+        // --- 4. NAVIGATION LOGIC ---
+        function generateSidebarLinks() {
+            const container = document.getElementById('brand-nav-container');
+            const brands = Object.keys(HistoricalData);
             
-            renderMainChart();
-            renderRegionalChart(); // New Render
-            renderRankingTable();
-            renderEVChart();
-            updateInsights();
-            updateRegionalInsights(); // New Insight
+            brands.forEach(brand => {
+                const btn = document.createElement('button');
+                btn.className = `nav-item w-full flex items-center gap-3 px-3 py-2 text-sm font-medium text-slate-600 dark:text-slate-400 rounded-md hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors text-left`;
+                btn.id = `nav-${brand}`;
+                btn.onclick = () => switchView(brand);
+                btn.innerHTML = `
+                    <span class="w-2 h-2 rounded-full" style="background-color: ${HistoricalData[brand].color}"></span>
+                    ${brand}
+                `;
+                container.appendChild(btn);
+            });
         }
 
-        // --- 4. RENDER FUNCTIONS ---
+        function switchView(viewName) {
+            currentTab = viewName;
+            
+            // 1. Update Navigation Styling
+            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+            if(viewName === 'overview') {
+                document.getElementById('nav-overview').classList.add('active');
+            } else {
+                document.getElementById(`nav-${viewName}`).classList.add('active');
+            }
 
-        // >>> MAIN MARKET CHART <<<
-        function setChartMode(mode) {
-            chartMode = mode;
-            updateBtnStyles('market', mode);
-            document.getElementById('yearSelect').classList.toggle('hidden', mode !== 'monthly');
-            renderMainChart();
-            updateInsights();
+            // 2. Toggle View Containers
+            const overviewEl = document.getElementById('view-overview');
+            const brandEl = document.getElementById('view-brand');
+            const titleEl = document.getElementById('page-title');
+
+            if (viewName === 'overview') {
+                overviewEl.classList.remove('hidden');
+                brandEl.classList.add('hidden');
+                titleEl.textContent = "Visão Geral do Mercado";
+                // Force Chartjs resize just in case
+                if(mainChartInstance) mainChartInstance.resize();
+            } else {
+                overviewEl.classList.add('hidden');
+                brandEl.classList.remove('hidden');
+                titleEl.textContent = `Análise: ${viewName}`;
+                
+                // 3. Render Brand Specific Data
+                renderBrandDashboard(viewName);
+            }
+        }
+
+        // --- 5. RENDER FUNCTIONS ---
+        
+        function renderBrandDashboard(brandKey) {
+            const data = HistoricalData[brandKey];
+            const isDark = document.documentElement.classList.contains('dark');
+            const textColor = isDark ? '#94a3b8' : '#64748b';
+            
+            // A. Update Texts
+            document.getElementById('brand-title').innerText = brandKey;
+            document.getElementById('brand-share-display').innerText = data.share[data.share.length - 1] + '%';
+            document.getElementById('brand-share-display').style.color = data.color;
+            document.getElementById('brand-insight-text').innerText = data.insight;
+            
+            // B. Update Header Border Color
+            document.getElementById('brand-header-card').style.borderLeftColor = data.color;
+
+            // C. Calculate Delta
+            const start = data.share[0];
+            const end = data.share[data.share.length - 1];
+            const delta = (end - start).toFixed(1);
+            document.getElementById('stat-start').innerText = start + '%';
+            document.getElementById('stat-end').innerText = end + '%';
+            
+            const badge = document.getElementById('stat-delta-badge');
+            if (delta > 0) {
+                badge.className = "inline-block w-full text-center py-1 rounded text-sm font-bold bg-emerald-100 text-emerald-700";
+                badge.innerText = `+${delta} pp (Crescimento)`;
+            } else {
+                badge.className = "inline-block w-full text-center py-1 rounded text-sm font-bold bg-red-100 text-red-700";
+                badge.innerText = `${delta} pp (Retração)`;
+            }
+
+            // D. Render Chart
+            const ctx = document.getElementById('brandChart').getContext('2d');
+            if(brandChartInstance) brandChartInstance.destroy();
+
+            // Create gradient
+            const gradient = ctx.createLinearGradient(0, 0, 0, 400);
+            gradient.addColorStop(0, hexToRgba(data.color, 0.5));
+            gradient.addColorStop(1, hexToRgba(data.color, 0.0));
+
+            brandChartInstance = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: data.years,
+                    datasets: [{
+                        label: 'Market Share (%)',
+                        data: data.share,
+                        borderColor: data.color,
+                        backgroundColor: gradient,
+                        fill: true,
+                        tension: 0.4,
+                        pointBackgroundColor: '#fff',
+                        pointBorderColor: data.color,
+                        pointBorderWidth: 2,
+                        pointRadius: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false }, tooltip: { mode: 'index', intersect: false } },
+                    scales: {
+                        y: { 
+                            beginAtZero: true, 
+                            grid: { color: isDark ? '#334155' : '#e2e8f0', borderDash: [5, 5] }, 
+                            ticks: { color: textColor } 
+                        },
+                        x: { 
+                            grid: { display: false }, 
+                            ticks: { color: textColor } 
+                        }
+                    }
+                }
+            });
         }
 
         function renderMainChart() {
             const ctx = document.getElementById('mainChart').getContext('2d');
-            if(chartInstance) chartInstance.destroy();
+            if(mainChartInstance) mainChartInstance.destroy();
             const isDark = document.documentElement.classList.contains('dark');
-            const textColor = isDark ? '#94a3b8' : '#64748b';
-            const gridColor = isDark ? '#334155' : '#e2e8f0';
 
-            let config = {};
-            if (chartMode === 'annual') {
-                config = { type: 'bar', data: { labels: appData.years, datasets: [{ label: 'Vendas (Milhões)', data: appData.annualData, backgroundColor: '#2563eb', borderRadius: 4 }] } };
-            } else if (chartMode === 'monthly') {
-                const year = document.getElementById('yearSelect').value;
-                config = { type: 'line', data: { labels: ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'], datasets: [{ label: `Vendas ${year}`, data: appData.monthlyData[year], borderColor: '#10b981', backgroundColor: 'rgba(16,185,129,0.1)', fill: true, tension: 0.3 }] } };
-            } else {
-                config = { type: 'line', data: { labels: appData.years, datasets: Object.keys(appData.brandsData).map(b => ({ label: b, data: appData.brandsData[b], borderColor: getBrandColor(b), tension: 0.3 })) } };
-            }
-            
-            config.options = { responsive: true, maintainAspectRatio: false, scales: { y: { grid: { color: gridColor }, ticks: { color: textColor } }, x: { grid: { display: false }, ticks: { color: textColor } } } };
-            chartInstance = new Chart(ctx, config);
-        }
-
-        // >>> NEW: REGIONAL CHART <<<
-        function setRegionalChartMode(mode) {
-            regionalChartMode = mode;
-            updateBtnStyles('regional', mode);
-            renderRegionalChart();
-            updateRegionalInsights();
-        }
-
-        function renderRegionalChart() {
-            const ctx = document.getElementById('regionalChart').getContext('2d');
-            if(regionalChartInstance) regionalChartInstance.destroy();
-            const isDark = document.documentElement.classList.contains('dark');
-            const textColor = isDark ? '#94a3b8' : '#64748b';
-
-            let config = {};
-
-            if (regionalChartMode === 'share') {
-                // DONUT CHART
-                config = {
-                    type: 'doughnut',
-                    data: {
-                        labels: appData.regionalData.labels,
-                        datasets: [{
-                            data: appData.regionalData.share,
-                            backgroundColor: ['#4f46e5', '#3b82f6', '#0ea5e9', '#f59e0b', '#10b981'],
-                            borderWidth: 0
-                        }]
-                    },
-                    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'right', labels: { color: textColor } } } }
-                };
-            } else if (regionalChartMode === 'trend') {
-                // LINE CHART (Regions over months)
-                config = {
-                    type: 'line',
-                    data: {
-                        labels: ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov'],
-                        datasets: appData.regionalData.labels.map((region, i) => ({
-                            label: region,
-                            data: appData.regionalData.trend[region],
-                            borderColor: ['#4f46e5', '#3b82f6', '#0ea5e9', '#f59e0b', '#10b981'][i],
-                            tension: 0.3,
-                            pointRadius: 2
-                        }))
-                    },
-                    options: { responsive: true, maintainAspectRatio: false, scales: { y: { grid: { color: isDark ? '#334155' : '#e2e8f0' }, ticks: { color: textColor } }, x: { ticks: { color: textColor } } } }
-                };
-            } else {
-                // STACKED BAR (Top 10 Models x Regions)
-                config = {
-                    type: 'bar',
-                    data: {
-                        labels: appData.regionalData.top10Mix.labels,
-                        datasets: appData.regionalData.labels.map((region, i) => ({
-                            label: region,
-                            data: appData.regionalData.top10Mix.regions[region],
-                            backgroundColor: ['#4f46e5', '#3b82f6', '#0ea5e9', '#f59e0b', '#10b981'][i]
-                        }))
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        scales: { x: { stacked: true, ticks: { color: textColor } }, y: { stacked: true, grid: { color: isDark ? '#334155' : '#e2e8f0' }, ticks: { color: textColor } } },
-                        plugins: { legend: { position: 'top', labels: { color: textColor } }, tooltip: { mode: 'index', intersect: false } }
+            mainChartInstance = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['2015', '2016', '2017', '2018', '2019', '2020', '2021', '2022', '2023', '2024', '2025'],
+                    datasets: [{
+                        label: 'Volume Total (Milhões)',
+                        data: [2.5, 2.0, 2.2, 2.5, 2.7, 2.0, 1.9, 2.1, 2.3, 2.65, 2.85],
+                        backgroundColor: '#2563eb',
+                        borderRadius: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: { grid: { color: isDark ? '#334155' : '#e2e8f0' } },
+                        x: { grid: { display: false } }
                     }
-                };
-            }
-            regionalChartInstance = new Chart(ctx, config);
+                }
+            });
         }
 
-        // >>> INSIGHTS UPDATERS <<<
-        function updateInsights() {
-            const el = document.getElementById('chart-insight');
-            if (chartMode === 'annual') el.innerHTML = "<strong>Recuperação Macro:</strong> O mercado caminha para retomar o patamar de 3 milhões de unidades. O crescimento composto (CAGR) desde 2021 é positivo.";
-            else if (chartMode === 'monthly') el.innerHTML = "<strong>Sazonalidade:</strong> Observa-se a tendência tradicional de aquecimento no segundo semestre (efeito 13º salário e frotas).";
-            else el.innerHTML = "<strong>Market Share:</strong> A Fiat (Vermelho) consolidou liderança absoluta graças à estratégia de Picapes + SUVs.";
-        }
-
-        function updateRegionalInsights() {
-            const el = document.getElementById('regional-insight');
-            if (regionalChartMode === 'share') el.innerHTML = "<strong>Concentração Econômica:</strong> O Sudeste (51.8%) ainda dita o volume, mas o Centro-Oeste é a região que mais cresce percentualmente YoY (+9%), impulsionado pelo agronegócio.";
-            else if (regionalChartMode === 'trend') el.innerHTML = "<strong>Descolamento do Sul:</strong> A região Sul mostra estabilidade, enquanto o Nordeste apresenta volatilidade dependente de incentivos fiscais.";
-            else el.innerHTML = "<strong>Mix de Produto:</strong> Note a barra amarela (Centro-Oeste) dominando na 'Strada' e 'Hilux'. Já o 'Polo' e 'Onix' são sustentados maciçamente pelo volume azul escuro (Sudeste).";
-        }
-
-        // >>> HELPERS & EV CHART <<<
-        function getBrandColor(brand) { const colors = { Fiat: '#ef4444', VW: '#3b82f6', GM: '#eab308', Toyota: '#64748b' }; return colors[brand] || '#999'; }
-        
-        function updateBtnStyles(section, mode) {
-            const prefix = section === 'market' ? 'btn-' : 'btn-reg-';
-            const highlightClass = "bg-white dark:bg-slate-700 text-brand-600 dark:text-white shadow-sm";
-            const normalClass = "text-slate-500 dark:text-slate-400";
-            
-            // Logic handled by onclick re-rendering classes inline in a real app, 
-            // but here we manually toggle for simple vanilla JS
-            if(section === 'market') {
-                ['annual', 'monthly', 'brands'].forEach(m => {
-                    document.getElementById(prefix+m).className = `px-4 py-1.5 text-sm font-semibold rounded-md transition-all ${m===mode ? highlightClass : normalClass}`;
-                });
-            } else {
-                ['share', 'trend', 'models'].forEach(m => {
-                    document.getElementById(prefix+m).className = `px-4 py-1.5 text-sm font-semibold rounded-md transition-all ${m===mode ? highlightClass.replace('brand', 'indigo') : normalClass}`;
-                });
-            }
-        }
-
-        function renderEVChart() {
-            const ctx = document.getElementById('evChart').getContext('2d');
-            new Chart(ctx, { type: 'line', data: { labels: ['2020','2021','2022','2023','2024','2025'], datasets: [{ label: 'Vendas EV', data: [19745, 34990, 49245, 93927, 177358, 220000], borderColor: '#6366f1', backgroundColor: 'rgba(99, 102, 241, 0.2)', fill: true, tension: 0.4 }] }, options: { responsive: true, maintainAspectRatio: false, scales: { y: { display:false }, x: { grid: { display:false } } } } });
-        }
-
-        // >>> TABLE <<<
-        function renderRankingTable() {
-            const search = document.getElementById('searchInput').value.toLowerCase();
-            const filtered = appData.ranking.filter(i => i.m.toLowerCase().includes(search) || i.c.toLowerCase().includes(search));
-            const start = (tablePage - 1) * rowsPerPage;
-            const tbody = document.getElementById('rankingTable');
-            document.getElementById('currentPage').innerText = tablePage;
-            
-            tbody.innerHTML = filtered.slice(start, start + rowsPerPage).map(car => `
-                <tr class="hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors">
-                    <td class="px-6 py-4 font-bold text-slate-600 dark:text-slate-400">#${car.r}</td>
-                    <td class="px-6 py-4 font-bold text-slate-900 dark:text-white">${car.m}<div class="text-xs text-slate-500 font-normal">${car.b}</div></td>
-                    <td class="px-6 py-4"><span class="px-2 py-1 rounded text-xs font-bold uppercase ${car.c.includes('SUV') ? 'bg-indigo-100 text-indigo-700' : 'bg-slate-100 text-slate-700'}">${car.c}</span></td>
-                    <td class="px-6 py-4"><div class="w-24 bg-slate-200 h-1.5 rounded-full overflow-hidden"><div class="bg-brand-500 h-1.5" style="width:${100-(car.r*3)}%"></div></div></td>
-                </tr>`).join('');
-        }
-        document.getElementById('searchInput').addEventListener('input', () => { tablePage=1; renderRankingTable(); });
-        function changePage(d) { if((d===1 && (tablePage*rowsPerPage)<appData.ranking.length) || (d===-1 && tablePage>1)) { tablePage+=d; renderRankingTable(); }}
-
-        // >>> THEME <<<
+        // --- 6. UTILS ---
         function initTheme() {
-            if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) document.documentElement.classList.add('dark');
+            if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                document.documentElement.classList.add('dark');
+            }
+            
+            document.getElementById('theme-toggle').addEventListener('click', () => {
+                document.documentElement.classList.toggle('dark');
+                localStorage.theme = document.documentElement.classList.contains('dark') ? 'dark' : 'light';
+                // Re-render charts to update grid colors
+                if(currentTab === 'overview') renderMainChart();
+                else renderBrandDashboard(currentTab);
+            });
         }
-        document.getElementById('theme-toggle').addEventListener('click', () => {
-            document.documentElement.classList.toggle('dark');
-            localStorage.theme = document.documentElement.classList.contains('dark') ? 'dark' : 'light';
-            renderMainChart(); renderRegionalChart(); renderEVChart(); // Re-render for color update
-        });
 
-        initDashboard();
+        function hexToRgba(hex, alpha) {
+            const r = parseInt(hex.slice(1, 3), 16);
+            const g = parseInt(hex.slice(3, 5), 16);
+            const b = parseInt(hex.slice(5, 7), 16);
+            return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+        }
     </script>
 </body>
 </html>
-
-
